@@ -22,11 +22,13 @@
         <developer/>
     </developers>
     <modules>
-        <module>API Gateway</module>
+       <!-- <module>API Gateway</module>
         <module>Service Registry</module>
-        <module>Reservas</module>
+        <module>Usuarios</module> -->
         <module>Publicaciones</module>
-        <module>Usuarios</module>
+        <module>Reservas</module>
+
+
     </modules>
     <scm>
         <connection/>
@@ -97,7 +99,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <encoding>UTF-8</encoding>
+                    <!-- <encoding>UTF-8</encoding> -->
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
