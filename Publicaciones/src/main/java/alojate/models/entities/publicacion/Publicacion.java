@@ -27,5 +27,6 @@ public class Publicacion {
     private LocalDateTime validaDesde;
     private LocalDateTime validaHasta;
     private String puntaje;
+    private List<Etiqueta> etiquetas;
 
 }
