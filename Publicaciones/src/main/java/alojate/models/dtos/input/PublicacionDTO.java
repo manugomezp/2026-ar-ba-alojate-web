@@ -16,7 +16,6 @@ public class PublicacionDTO {
     private String descripcion;
     private Double costoPorNoche;
     private String divisa;
-    //private List<FormularioRespondido> formularioDeAmenities;
     private String formaDePago;
     private String checkIn;
     private String checkOut;

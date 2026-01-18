@@ -7,13 +7,12 @@ public class InPublicacion {
     private String titulo;
     private String anfitrion_id;
     private String categoria;
-    private List<MultimediaDTO> multimedia;
+    private List<InMultimedia> multimedia;
     private String ubicacion;
     private String capacidad;
     private String descripcion;
     private Double costoPorNoche;
     private String divisa;
-    //private List<FormularioRespondido> formularioDeAmenities;
     private String formaDePago;
     private String checkIn;
     private String checkOut;

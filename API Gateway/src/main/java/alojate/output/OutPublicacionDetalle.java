@@ -1,9 +1,7 @@
 package alojate.output;
 
-import alojate.input.MultimediaDTO;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
