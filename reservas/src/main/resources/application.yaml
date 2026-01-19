@@ -1,3 +1,5 @@
 spring:
   application:
     name: reservas
+server:
+  port: 9000

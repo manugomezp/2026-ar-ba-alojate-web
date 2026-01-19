@@ -1,3 +1,5 @@
 spring:
   application:
     name: usuarios
+server:
+  port: 9020

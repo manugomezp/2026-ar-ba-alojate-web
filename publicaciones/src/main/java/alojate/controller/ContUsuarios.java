@@ -7,14 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping
-@CrossOrigin("http://localhost:8090")
-public class ContPublicaciones {
+@CrossOrigin(origins = "http://localhost:8090")
+public class ContUsuarios {
 
-    @GetMapping("/api/mensaje")
+
+
+    @GetMapping("/api/publicaciones")
     public String publicaciones() {
-        System.out.println("publicaciones ha recibido la request de gateway");
         return "Hola desde publicaciones!";
     }
 }
-
-
