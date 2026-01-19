@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>ServiceRegistry</artifactId>
-    <name>bService Registry</name>
+    <artifactId>Service-Registry</artifactId>
+    <name>Service-Registry</name>
     <description>Módulo para registro de los microservicios</description>
 
 

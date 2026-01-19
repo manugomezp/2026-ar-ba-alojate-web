@@ -15,8 +15,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>apigateway</artifactId>
-    <name>API Gateway</name>
+    <artifactId>api-gateway</artifactId>
+    <name>API-Gateway</name>
     <description>Gateway de acceso a los microservicios</description>
 
     <packaging>jar</packaging>

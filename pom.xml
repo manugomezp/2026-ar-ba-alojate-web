@@ -27,8 +27,8 @@
 
     <!-- 📦 Módulos (nombres de carpetas reales, sin espacios) -->
     <modules>
-        <module>API Gateway</module>
-        <module>bService Registry</module>
+        <module>API-Gateway</module>
+        <module>Service-Registry</module>
         <module>Publicaciones</module>
         <module>Reservas</module>
         <module>Usuarios</module>
