@@ -6,66 +6,68 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 🔹 Parent: POM raíz -->
+    <!-- Parent desde el POM raíz -->
     <parent>
         <groupId>2026-ar-ba-alojate-web</groupId>
         <artifactId>2026-ar-ba-alojate-web</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>usuarios</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>Usuarios</name>
-    <description>Microservicio de gestión de usuarios</description>
+    <description>Microservicio de gestión de usuarios </description>
 
-    <packaging>jar</packaging>
+    <properties>
+        <!-- Propiedades específicas para este módulo si las necesitas -->
+    </properties>
 
     <dependencies>
-
-        <!-- 🌐 Spring MVC -->
+        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!-- 📦 Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- JPA Hibernate -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-
-        <!-- Spring Web Flux -->
-
+        <!-- Lombok -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
-        <!-- 🧪 Testing -->
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
+        <!-- WebFlux solo si realmente lo necesitas -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <!-- 🚀 Ejecutable Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

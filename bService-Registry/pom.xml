@@ -6,50 +6,56 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 🔹 Parent: POM raíz -->
-    <!-- DEBE USAR DEPENDENCIA WEB FLUX PORQUE SUS REQUEST NO PUEDEN SER BLOQUEANTES-->
+    <!-- Parent desde el POM raíz -->
     <parent>
         <groupId>2026-ar-ba-alojate-web</groupId>
         <artifactId>2026-ar-ba-alojate-web</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>apigateway</artifactId>
-    <name>API Gateway</name>
-    <description>Gateway de acceso a los microservicios</description>
+    <artifactId>service-registry</artifactId>
+    <name>bService-Registry</name>
+    <description>Service Registry (Eureka Server) para el sistema Alojate</description>
 
-    <packaging>jar</packaging>
+    <properties>
+        <!-- Propiedades específicas para service registry -->
+    </properties>
 
     <dependencies>
-
-        <!-- 🌐 Spring Cloud Gateway (incluye WebFlux) -->
+        <!-- Eureka Server -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
 
-        <!-- 🛡 Resilience4J -->
+        <!-- Lombok -->
         <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-spring-boot3</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
-        <!-- 🧪 Testing -->
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
-            <!-- 🚀 Ejecutable Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
