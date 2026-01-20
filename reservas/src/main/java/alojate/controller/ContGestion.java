@@ -10,14 +10,14 @@ import java.util.List;
 @RestController
 @RequestMapping
 public class ContGestion {
-    private final ServRecorrido servRecorrido;
-
-    public ContGestion(ServRecorrido servRecorrido) {
-        this.servRecorrido = servRecorrido;
-    }
-
-    @PostMapping("/api/trayectos")
-    public void alta(@RequestBody List<TrayectoDTO> trayectos){
-        servRecorrido.alta(trayectos);
-    }
+//    private final ServRecorrido servRecorrido;
+//
+//    public ContGestion(ServRecorrido servRecorrido) {
+//        this.servRecorrido = servRecorrido;
+//    }
+//
+//    @PostMapping("/api/trayectos")
+//    public void alta(@RequestBody List<TrayectoDTO> trayectos){
+//        servRecorrido.alta(trayectos);
+//    }
 }

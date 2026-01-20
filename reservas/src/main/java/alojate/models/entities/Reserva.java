@@ -29,4 +29,9 @@ public class Reserva {
         this.destino = destino;
         this.estado = estado;
     }
+
+    public Reserva(String publicacion_id)
+        {
+        this.publicacion_id = publicacion_id;
+        }
 }

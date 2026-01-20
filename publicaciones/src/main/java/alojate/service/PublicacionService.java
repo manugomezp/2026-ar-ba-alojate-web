@@ -1,14 +1,27 @@
 package alojate.service;
 
-import alojate.models.entities.publicacion.Publicacion;
-import alojate.models.repository.IReposPublicacion;
-import alojate.models.dtos.input.PublicacionDTO;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+
+
+import java.util.List;
 
 @Service
 public class PublicacionService {
+
+    private final DiscoveryClient discoveryClient;
+    private final RestClient restClient;
+
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder) {
+        this.discoveryClient = discoveryClient;
+        this.restClient = builder
+                .baseUrl("http://localhost:8090")
+                .build();
+    }
 
 //    private final IReposPublicacion reposPublicacion;
 //    public PublicacionService(IReposPublicacion reposPublicacion) {
@@ -37,6 +50,13 @@ public class PublicacionService {
 //        reposPublicacion.save(publicacion);
 //    }
 
+    public List<String> obtenerDisponibles(){
+        ServiceInstance serviceInstance = discoveryClient.getInstances("reservas").get(0);
+        return restClient.get()
+                .uri(serviceInstance.getUri() + "/api/publicaciones-reservadas")
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<String>>() {});
+    }
 
 
 
