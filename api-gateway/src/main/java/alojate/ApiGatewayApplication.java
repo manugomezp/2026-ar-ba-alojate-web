@@ -2,9 +2,6 @@ package alojate;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.gateway.route.RouteLocator;
-import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ApiGatewayApplication {
@@ -24,22 +21,22 @@ public class ApiGatewayApplication {
 //                        .uri("http://httpbin.org:80"))
 //                .build();
 //    }
-
-        @Bean
-        public RouteLocator rutasPublicaciones(RouteLocatorBuilder builder) {
-            return builder.routes()
-                    .route("publicaciones_route", r -> r
-                            .path("/api/publicaciones/**")
-                            .filters(f -> f
-                                    .rewritePath(
-                                            "/api/publicaciones/(?<segment>.*)",
-                                            "/api/${segment}"
-                                    )
-                            )
-                            .uri("http://localhost:8090")
-                    )
-                    .build();
-        }
+//
+//        @Bean
+//        public RouteLocator rutasPublicaciones(RouteLocatorBuilder builder) {
+//            return builder.routes()
+//                    .route("publicaciones_route", r -> r
+//                            .path("/api/publicaciones/**")
+//                            .filters(f -> f
+//                                    .rewritePath(
+//                                            "/api/publicaciones/(?<segment>.*)",
+//                                            "/api/${segment}"
+//                                    )
+//                            )
+//                            .uri("http://localhost:8090")
+//                    )
+//                    .build();
+//        }
 
 
 
