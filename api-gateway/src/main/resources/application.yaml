@@ -6,23 +6,43 @@ spring:
       server:
         webflux:
           routes:
-            - id: publicaciones_route
-              uri: http://localhost:8090
+            - id: publicaciones
+              uri: lb://publicaciones
               predicates:
-                - Path=/api/publicaciones/**
+                - Path=/alojate/publicaciones/**, /images/**
               filters:
-                - RewritePath=/api/publicaciones/(?<segment>.*), /alojate/publicaciones/${segment}
-            - id: reservas_route
-              uri: http://localhost:9000
+                - RewritePath=/alojate/publicaciones/(?<segment>.*), /api/publicaciones/${segment}
+            - id: reservas
+              uri: lb://reservas
               predicates:
-                - Path=/api/reservas/**
+                - Path=/alojate/reservas/**, /images/**
               filters:
-                - RewritePath=/api/reservas/(?<segment>.*), /alojate/reservas/${segment}
-            - id: usuarios_route
-              uri: http://localhost:9010
+                - RewritePath=/alojate/reservas/(?<segment>.*), /api/reservas/${segment}
+            - id: usuarios
+              uri: lb://usuarios
               predicates:
-                - Path=/api/usuarios/**
+                - Path=/alojate/usuarios/**
               filters:
-                - RewritePath=/api/usuarios/(?<segment>.*), /alojate/usuarios/${segment}
+                - RewritePath=/alojate/usuarios/(?<segment>.*), /api/usuarios/${segment}
 server:
   port: 8080
+
+
+#            - id: publicaciones_route
+#              uri: http://localhost:8090
+#              predicates:
+#                - Path=/api/publicaciones/**
+#              filters:
+#                - RewritePath=/api/publicaciones/(?<segment>.*), /alojate/publicaciones/${segment}
+#            - id: reservas_route
+#              uri: http://localhost:9000
+#              predicates:
+#                - Path=/api/reservas/**
+#              filters:
+#                - RewritePath=/api/reservas/(?<segment>.*), /alojate/reservas/${segment}
+#            - id: usuarios_route
+#              uri: http://localhost:9010
+#              predicates:
+#                - Path=/api/usuarios/**
+#              filters:
+#                - RewritePath=/api/usuarios/(?<segment>.*), /alojate/usuarios/${segment}
