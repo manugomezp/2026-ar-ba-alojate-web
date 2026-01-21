@@ -22,23 +22,6 @@ public class ApiGatewayApplication {
 //                .build();
 //    }
 //
-//        @Bean
-//        public RouteLocator rutasPublicaciones(RouteLocatorBuilder builder) {
-//            return builder.routes()
-//                    .route("publicaciones_route", r -> r
-//                            .path("/api/publicaciones/**")
-//                            .filters(f -> f
-//                                    .rewritePath(
-//                                            "/api/publicaciones/(?<segment>.*)",
-//                                            "/api/${segment}"
-//                                    )
-//                            )
-//                            .uri("http://localhost:8090")
-//                    )
-//                    .build();
-//        }
-
-
 
 
 

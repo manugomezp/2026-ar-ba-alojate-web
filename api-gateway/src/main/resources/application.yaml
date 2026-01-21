@@ -11,7 +11,18 @@ spring:
               predicates:
                 - Path=/api/publicaciones/**
               filters:
-                - RewritePath=/api/publicaciones/(?<segment>.*), /publicaciones/${segment}
-
+                - RewritePath=/api/publicaciones/(?<segment>.*), /alojate/publicaciones/${segment}
+            - id: reservas_route
+              uri: http://localhost:9000
+              predicates:
+                - Path=/api/reservas/**
+              filters:
+                - RewritePath=/api/reservas/(?<segment>.*), /alojate/reservas/${segment}
+            - id: usuarios_route
+              uri: http://localhost:9010
+              predicates:
+                - Path=/api/usuarios/**
+              filters:
+                - RewritePath=/api/usuarios/(?<segment>.*), /alojate/usuarios/${segment}
 server:
   port: 8080
