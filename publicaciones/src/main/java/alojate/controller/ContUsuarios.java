@@ -1,11 +1,9 @@
 package alojate.controller;
 
+import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.service.PublicacionService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,17 +13,21 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8090")
 public class ContUsuarios {
 
-    private final PublicacionService servPublicaciones;
+    private final PublicacionService publicacionService;
 
 
-    public ContUsuarios(PublicacionService servPublicaciones) {
-        this.servPublicaciones = servPublicaciones;
+    public ContUsuarios(PublicacionService publicacionService) {
+        this.publicacionService = publicacionService;
     }
 
 //    @GetMapping("/api/publicaciones")
 //    public String publicaciones() {
 //        return "Hola desde publicaciones!";
 //    }
+    @PostMapping("/api/publicaciones")
+    public void alta(@RequestBody PublicacionDTO dto){
+        publicacionService.alta(dto);
+    }
 
     @GetMapping("/api/publicaciones")
     public List<OutPublicacionSimple> devolver(){
@@ -36,14 +38,22 @@ public class ContUsuarios {
 
         lista.add(simpleUno);
         lista.add(simpleDos);
+        lista.add(
+                publicacionService.
+                toOutPublicacionSimple(publicacionService.publicacionesDisponibles.get(0))
+                );
+
 
         System.out.println("SE DEVUELVEN LAS PUBLICACIONES EN FORMATO JSON?");
 
         return lista;
     }
 
+
+
+
     @GetMapping("/api/publicaciones-disponibles")
     public List<String> devolverDisponibles(){
-        return servPublicaciones.obtenerDisponibles();
+        return publicacionService.obtenerDisponibles();
     }
 }
