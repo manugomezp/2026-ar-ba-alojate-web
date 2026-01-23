@@ -21,9 +21,12 @@ public class Reserva {
     private Estado estado;
 
     //
-    public Reserva(String viajero_id, String publicacion_id, LocalDateTime checkIn, LocalDateTime checkOut, Double costoAbonado, Double costoPorAbonar, Destino destino, String estado) {
+    public Reserva(String viajero_id, String publicacion_id, String nombre_pub, String nombre_viajero,
+                   LocalDateTime checkIn, LocalDateTime checkOut, Double costoAbonado, Double costoPorAbonar, Destino destino, String estado) {
         this.viajero_id = viajero_id;
         this.publicacion_id = publicacion_id;
+        this.nombre_publicacion = nombre_pub;
+        this.nombre_viajero = nombre_viajero;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.costoAbonado = costoAbonado;

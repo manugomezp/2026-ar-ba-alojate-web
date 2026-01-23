@@ -1,6 +1,7 @@
 package alojate.controller;
 
 import alojate.models.dtos.ReservaDTO;
+import alojate.models.dtos.output.OutReservaDTO;
 import alojate.models.entities.Reserva;
 import alojate.service.ReservaService;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +19,11 @@ public class ContUsuarios{
         this.reservaService = reservaService;
     }
 
-
-    @GetMapping("/api/reservas")
-    public String reservas() {
-        return "Hola desde reservas!";
-    }
+//
+//    @GetMapping("/api/reservas")
+//    public String reservas() {
+//        return "Hola desde reservas!";
+//    }
 
     @GetMapping("/api/publicaciones-reservadas")
     public List<String> publicacionesReservadas(){
@@ -32,9 +33,14 @@ public class ContUsuarios{
         return List.of(reserva.getPublicacion_id(), reserva2.getPublicacion_id());
     }
 
-    @PostMapping("/api/reservas/")
+    @PostMapping("/api/reservas")
     public void alta(@RequestBody ReservaDTO reservaDTO){
         reservaService.alta(reservaDTO);
+    }
+
+    @GetMapping("/api/reservas")
+    public List<OutReservaDTO> devolverTodas(@RequestParam("viajero_id") String id_viajero ){
+        return reservaService.devolverTodas(id_viajero);
     }
 
 

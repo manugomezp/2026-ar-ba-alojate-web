@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class OutReservaDTO {
     private String nombre_publicacion;
-  //  private String nombre_viajero;
+    //private String nombre_viajero;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
     private String destino;

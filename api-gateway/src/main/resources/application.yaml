@@ -11,19 +11,19 @@ spring:
               predicates:
                 - Path=/alojate/publicaciones/**, /images/**
               filters:
-                - RewritePath=/alojate/publicaciones/(?<segment>.*), /api/publicaciones/${segment}
+                - RewritePath=/alojate/publicaciones(?<segment>.*), /api/publicaciones${segment}
             - id: reservas
               uri: lb://reservas
               predicates:
                 - Path=/alojate/reservas/**, /images/**
               filters:
-                - RewritePath=/alojate/reservas/(?<segment>.*), /api/reservas/${segment}
+                - RewritePath=/alojate/reservas(?<segment>.*), /api/reservas${segment}
             - id: usuarios
               uri: lb://usuarios
               predicates:
                 - Path=/alojate/usuarios/**
               filters:
-                - RewritePath=/alojate/usuarios/(?<segment>.*), /api/usuarios/${segment}
+                - RewritePath=/alojate/usuarios(?<segment>.*), /api/usuarios${segment}
 server:
   port: 8080
 

@@ -24,12 +24,12 @@ public class ContUsuarios {
 //    public String publicaciones() {
 //        return "Hola desde publicaciones!";
 //    }
-    @PostMapping("/api/publicaciones/")
+    @PostMapping("/api/publicaciones")
     public void alta(@RequestBody PublicacionDTO dto){
         publicacionService.alta(dto);
     }
 
-    @GetMapping("/api/publicaciones/")
+    @GetMapping("/api/publicaciones")
     public List<OutPublicacionSimple> devolver(){
         List<OutPublicacionSimple> lista = new ArrayList<>();
 

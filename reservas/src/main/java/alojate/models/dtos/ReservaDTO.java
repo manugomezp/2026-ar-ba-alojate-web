@@ -20,4 +20,5 @@ public class ReservaDTO {
     private Double costoAbonado;
     private Double costoPorAbonar;
     private String destino;
+    private String estado;
 }
