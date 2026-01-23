@@ -1,19 +1,18 @@
 package alojate.service;
 
-import org.springframework.cloud.gateway.route.RouteLocator;
+
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 
-@Service
+//@Service
 public class Microservicios {
 
-    private final RouteLocatorBuilder builder;
-
-    public Microservicios( RouteLocatorBuilder builder) {
-        this.builder = builder;
-    }
+//    private final RouteLocatorBuilder builder;
+//
+//    public Microservicios( RouteLocatorBuilder builder) {
+//        this.builder = builder;
+//    }
 
 //    @Bean
 //    public RouteLocator publicaciones() {

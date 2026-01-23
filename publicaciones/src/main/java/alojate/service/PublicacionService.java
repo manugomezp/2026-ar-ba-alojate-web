@@ -18,7 +18,6 @@ public class PublicacionService {
     private final DiscoveryClient discoveryClient;
     private final RestClient restClient;
     public List<Publicacion> publicacionesDisponibles = new ArrayList<Publicacion>();
-    //public final IReposPublicacion iReposPublicacion;
 
     public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder) {
         this.discoveryClient = discoveryClient;
