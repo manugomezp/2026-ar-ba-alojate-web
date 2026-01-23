@@ -11,7 +11,12 @@ public class PublicacionDTO {
     private String anfitrion_id;
     private String categoria;
     private List<MultimediaDTO> multimedia;
-    private String ubicacion;
+    private String calle;
+    private String altura;
+    private String pais;
+    private String codigoPostal;
+    private String provincia;
+    private String ciudad;
     private String capacidad;
     private String descripcion;
     private Double costoPorNoche;
