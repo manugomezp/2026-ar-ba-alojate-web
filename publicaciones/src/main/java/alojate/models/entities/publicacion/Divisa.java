@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
-@Table(name = "publicacion")
+@Table(name = "divisa")
 public class Divisa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,5 +17,10 @@ public class Divisa {
     private String nombre;
     @Column
     private String pais;
+
+    public Divisa(String nombre, String pais) {
+        this.nombre = nombre;
+        this.pais = pais;
+    }
 }
 

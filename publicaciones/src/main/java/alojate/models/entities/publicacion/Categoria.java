@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "categoria")
@@ -15,7 +14,11 @@ public class Categoria {
     @GeneratedValue
     private Long id;
     @Column
-    private String categoria;
+    private String nombre;
+
+    public Categoria (String nombre) {
+        this.nombre = nombre;
+    }
 
 
 }

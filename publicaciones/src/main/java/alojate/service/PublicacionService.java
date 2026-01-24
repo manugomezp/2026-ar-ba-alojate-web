@@ -1,6 +1,7 @@
 package alojate.service;
 
 import alojate.models.dtos.input.PublicacionDTO;
+import alojate.models.dtos.input.QueryParamsPublicacion;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.models.entities.geocoding.GeoCoding;
 import alojate.models.entities.geocoding.GeoCodingHTTP;
@@ -8,6 +9,7 @@ import alojate.models.entities.publicacion.Categoria;
 import alojate.models.entities.publicacion.Divisa;
 import alojate.models.entities.publicacion.Publicacion;
 import alojate.models.entities.publicacion.Ubicacion;
+import alojate.models.repository.IReposCategoria;
 import alojate.models.repository.IReposPublicacion;
 import alojate.models.repository.IUbicacionRepos;
 import org.springframework.cloud.client.ServiceInstance;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,34 +31,23 @@ public class PublicacionService {
     private final RestClient restClient;
     private final IReposPublicacion reposPublicacion;
     private final IUbicacionRepos reposUbicacion;
-    public List<Publicacion> publicacionesDisponibles = new ArrayList<Publicacion>();
-    public List<Categoria> categorias = new ArrayList<Categoria>();
-    public List<Divisa> divisas = new ArrayList<Divisa>();
+    private final IReposCategoria reposCategoria;
+
     private final GeoCoding geoCoding;
 
-    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion) {
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
                 .build();
         this.reposPublicacion = reposPublicacion;
         this.reposUbicacion = reposUbicacion;
+        this.reposCategoria = reposCategoria;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
     }
 
-    public OutPublicacionSimple toOutPublicacionSimple(Publicacion p){
-        System.out.println("LATITUD"+ p.getUbicacion().getLatitud().toString());
-        System.out.println("LONGITUD" + p.getUbicacion().getLongitud().toString());
 
-        return new OutPublicacionSimple(
-                "Una foto de la casa",
-                p.getPuntaje(),
-                "USD" + p.getCostoPorNoche().toString(),
-                p.getTitulo(),
-                "CASA"
-                );
-    }
     public void alta(PublicacionDTO dto) {
         if (dto == null){
             return;
@@ -69,7 +62,7 @@ public class PublicacionService {
         p.setTitulo(dto.getTitulo());
         p.setUbicacion(u);
         p.setAnfitrion_id(dto.getAnfitrion_id());
-        p.setCapacidad(dto.getCapacidad());
+        p.setCantidad_adultos_maxima(dto.getCapacidad());
         p.setDescripcion(dto.getDescripcion());
         p.setCostoPorNoche(dto.getCostoPorNoche());
         p.setCheckIn(dto.getCheckIn());
@@ -105,8 +98,35 @@ public class PublicacionService {
 //                : null);
 
         System.out.println("SE CREO UNA PUBLICACION EN PUBLICACIONES ✔✔✔");
-        publicacionesDisponibles.add(p);
         reposPublicacion.save(p);
+    }
+
+    public List<OutPublicacionSimple> obtener(QueryParamsPublicacion filtro) {
+        LocalDate checkInDate = LocalDate.parse(filtro.getCheckIn());
+        LocalDate checkOutDate = LocalDate.parse(filtro.getCheckOut());
+
+        LocalDateTime checkInDateTime = checkInDate.atTime(14, 0);
+        LocalDateTime checkOutDateTime = checkOutDate.atTime(11, 0);
+
+        List<Publicacion> publis = reposPublicacion.filtrar(filtro.getPais(), filtro.getCiudad(), checkInDateTime,
+                checkOutDateTime, filtro.getAdultos(), filtro.getAmbientes());
+
+        System.out.println("ESTOY POR DEVOLVER LAS PUBLICACIONES CAPO.");
+
+        return publis.stream().map(this::toOutPublicacionSimple).toList();
+    }
+
+    public OutPublicacionSimple toOutPublicacionSimple(Publicacion p){
+//        System.out.println("LATITUD"+ p.getUbicacion().getLatitud().toString());
+//        System.out.println("LONGITUD" + p.getUbicacion().getLongitud().toString());
+
+        return new OutPublicacionSimple(
+                "Una foto de la casa",
+                p.getPuntaje(),
+                p.getDivisa().getNombre() + p.getCostoPorNoche().toString(),
+                p.getTitulo(),
+                p.getCategoria().getNombre()
+        );
     }
 
 

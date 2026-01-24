@@ -3,10 +3,12 @@ package alojate.models.entities.publicacion;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Entity
 @NoArgsConstructor
 @Data
@@ -27,7 +29,9 @@ public class Publicacion {
     @OneToOne
     private Ubicacion ubicacion;
     @Column
-    private String capacidad;
+    private Integer cantidad_adultos_maxima;
+    @Column
+    private Integer cantidad_ambientes;
     @Column
     private String descripcion;
     @Enumerated(EnumType.STRING)
@@ -57,5 +61,22 @@ public class Publicacion {
             inverseJoinColumns = @JoinColumn(name = "etiqueta_id")
     )
     private List<Etiqueta> etiquetas;
+
+    // CONSTRUCTOR PARA TESTEO
+    public Publicacion(String titulo, LocalDateTime desde, LocalDateTime hasta,
+                       Integer adultos, Integer ambientes, Divisa divisa, Double costoPorNoche,
+                       Ubicacion ubicacion, Categoria categoria)
+    {
+        this.titulo = titulo;
+        this.validaDesde = desde;
+        this.validaHasta = hasta;
+        this.cantidad_ambientes = ambientes;
+        this.cantidad_adultos_maxima = adultos;
+        this.estado = Estado.ABIERTA;
+        this.costoPorNoche = costoPorNoche;
+        this.divisa = divisa;
+        this.ubicacion = ubicacion;
+        this.categoria = categoria;
+    }
 
 }

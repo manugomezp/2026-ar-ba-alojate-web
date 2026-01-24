@@ -17,7 +17,7 @@ public class PublicacionDTO {
     private String codigoPostal;
     private String provincia;
     private String ciudad;
-    private String capacidad;
+    private Integer capacidad;
     private String descripcion;
     private Double costoPorNoche;
     private String divisa;
