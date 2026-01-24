@@ -4,8 +4,12 @@ import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.models.entities.geocoding.GeoCoding;
 import alojate.models.entities.geocoding.GeoCodingHTTP;
+import alojate.models.entities.publicacion.Categoria;
+import alojate.models.entities.publicacion.Divisa;
 import alojate.models.entities.publicacion.Publicacion;
 import alojate.models.entities.publicacion.Ubicacion;
+import alojate.models.repository.IReposPublicacion;
+import alojate.models.repository.IUbicacionRepos;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,14 +25,20 @@ public class PublicacionService {
 
     private final DiscoveryClient discoveryClient;
     private final RestClient restClient;
+    private final IReposPublicacion reposPublicacion;
+    private final IUbicacionRepos reposUbicacion;
     public List<Publicacion> publicacionesDisponibles = new ArrayList<Publicacion>();
+    public List<Categoria> categorias = new ArrayList<Categoria>();
+    public List<Divisa> divisas = new ArrayList<Divisa>();
     private final GeoCoding geoCoding;
 
-    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder) {
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
                 .build();
+        this.reposPublicacion = reposPublicacion;
+        this.reposUbicacion = reposUbicacion;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
     }
@@ -52,7 +62,9 @@ public class PublicacionService {
 
         Publicacion p = new Publicacion();
         Ubicacion u = new Ubicacion(dto.getCalle(), dto.getAltura(), dto.getCodigoPostal(), dto.getPais(), dto.getCiudad());
+
         u.obtenerCoordenadas(geoCoding);
+        reposUbicacion.save(u);
 
         p.setTitulo(dto.getTitulo());
         p.setUbicacion(u);
@@ -94,6 +106,7 @@ public class PublicacionService {
 
         System.out.println("SE CREO UNA PUBLICACION EN PUBLICACIONES ✔✔✔");
         publicacionesDisponibles.add(p);
+        reposPublicacion.save(p);
     }
 
 

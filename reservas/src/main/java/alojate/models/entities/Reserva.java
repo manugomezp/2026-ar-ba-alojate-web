@@ -1,24 +1,42 @@
 package alojate.models.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
+@Entity
+@Table(name = "reservas")
 @NoArgsConstructor
 @Data
 public class Reserva {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "viajero_id", nullable = false)
     private String viajero_id;
+    @Column(name = "publicacion_id", nullable = false)
     private String publicacion_id;
+    @Column(name = "nombre_publicacion")
     private String nombre_publicacion;
+    @Column(name = "nombre_viajero")
     private String nombre_viajero;
+    @Column(name = "check_in", nullable = false)
     private LocalDateTime checkIn;
+    @Column(name = "check_out", nullable = false)
     private LocalDateTime checkOut;
+    @Column(name = "costo_abonado")
     private Double costoAbonado;
+    @Column(name = "costo_por_abonar")
     private Double costoPorAbonar;
-    private Destino destino;
+    @Enumerated(EnumType.STRING)
+    @Column
     private Estado estado;
+    @Embedded
+    private Destino destino;
 
     //
     public Reserva(String viajero_id, String publicacion_id, String nombre_pub, String nombre_viajero,
