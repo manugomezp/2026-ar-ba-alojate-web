@@ -1,4 +1,4 @@
-package alojate.usuarios.models.entities.notificacion;
+package alojate.models.entities.notificacion;
 
 public class WhatsAppSender implements INotificador{
     @Override

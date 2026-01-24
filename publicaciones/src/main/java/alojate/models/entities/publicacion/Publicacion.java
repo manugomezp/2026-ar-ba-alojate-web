@@ -39,9 +39,9 @@ public class Publicacion {
     @ManyToOne
     private FormaDePago formaDePago;
     @Column
-    private LocalDateTime checkIn;
+    private String checkIn;
     @Column
-    private LocalDateTime checkOut;
+    private String checkOut;
     @Column
     private Boolean cancelacionGratuita;
     @Column

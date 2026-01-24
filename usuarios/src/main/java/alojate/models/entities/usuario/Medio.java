@@ -1,4 +1,4 @@
-package alojate.usuarios.models.entities.usuario;
+package alojate.models.entities.usuario;
 
 public enum Medio {
     MAIL,

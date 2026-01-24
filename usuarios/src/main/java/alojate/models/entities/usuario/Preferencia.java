@@ -1,4 +1,4 @@
-package alojate.usuarios.models.entities.usuario;
+package alojate.models.entities.usuario;
 
 public class Preferencia {
     private String preferencia;

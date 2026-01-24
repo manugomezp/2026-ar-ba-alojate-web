@@ -1,8 +1,7 @@
-package alojate.usuarios.models.entities.notificacion;
+package alojate.models.entities.notificacion;
 
-import alojate.models.entities.usuario.Medio;
-import alojate.models.entities.usuario.Usuario;
 import lombok.Data;
+import alojate.models.entities.usuario.*;
 
 import java.time.LocalDateTime;
 

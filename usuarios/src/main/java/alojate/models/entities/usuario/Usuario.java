@@ -1,26 +1,40 @@
-package alojate.usuarios.models.entities.usuario;
+package alojate.models.entities.usuario;
 
-import alojate.models.entities.usuario.MedioDeContacto;
-import alojate.models.entities.usuario.Nacionalidad;
-import alojate.models.entities.usuario.Preferencia;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
 @Data
+@Entity
+@NoArgsConstructor
+@Table(name = "usuario")
 public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "nombre_completo", nullable = false)
     private String nombreCompleto;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Nacionalidad nacionalidad;
-    //private List<MedioDePago> medioDePago;
+
+  //  @OneToMany
     private List<Preferencia> preferencias;
+
+    @OneToMany
     private List<MedioDeContacto> mediosDeContacto;
-    // DEBEN SER PRECARGADAS Y PUEDEN INCLUIR EJEMPLOS COMO
-    // "CERCA_DEL_CENTRO", "CERCA_DEL_MAR", "CASA", "DEPARTAMENTO"
-    // MMM, REVISAR SU UTILIDAD MÁS ADELANTE.
+
+    @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNac;
+
+    @Column(name = "url_foto")
     private String urlFoto;
+
 
     public Integer edad(){
         return Period.between(fechaNac, LocalDate.now()).getYears();

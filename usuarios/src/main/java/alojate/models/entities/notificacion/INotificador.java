@@ -1,5 +1,4 @@
-package alojate.usuarios.models.entities.notificacion;
-
+package alojate.models.entities.notificacion;
 
 public interface INotificador {
      public void enviar(Message mensaje);

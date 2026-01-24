@@ -1,7 +1,5 @@
-package alojate.usuarios.models.entities.notificacion;
+package alojate.models.entities.notificacion;
 
-
-import alojate.models.entities.notificacion.INotificador;
 
 public class MailSender implements INotificador {
     @Override
