@@ -125,7 +125,8 @@ public class PublicacionService {
                 p.getPuntaje(),
                 p.getDivisa().getNombre() + p.getCostoPorNoche().toString(),
                 p.getTitulo(),
-                p.getCategoria().getNombre()
+                p.getCategoria().getNombre(),
+                p.getUbicacion().calleAlturaCiudadPais()
         );
     }
 

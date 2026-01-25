@@ -9,12 +9,15 @@ public class OutPublicacionSimple {
     private String precioPorNoche;
     private String descripción; // 30 caracteres máx
     private String categoria; // si es casa, departamento, etc.
+    private String destino;
 
-    public OutPublicacionSimple(String url, String puntaje, String precioPorNoche, String descripción, String categoria) {
+    public OutPublicacionSimple(String url, String puntaje, String precioPorNoche,
+                                String descripción, String categoria, String destino ) {
         this.url = url;
         this.puntaje = puntaje;
         this.precioPorNoche = precioPorNoche;
         this.descripción = descripción;
         this.categoria = categoria;
+        this.destino = destino;
     }
 }

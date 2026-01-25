@@ -42,10 +42,23 @@ public class Ubicacion {
         this.ciudad = ciudad;
     }
 
+    public Ubicacion(String calle, String altura, String codigoPostal, String pais, String provincia,  String ciudad) {
+        this.calle = calle;
+        this.altura = altura;
+        this.codigoPostal = codigoPostal;
+        this.pais = pais;
+        this.ciudad = ciudad;
+        this.provincia = provincia;
+    }
+
     public void asignarCoordenadas(Double latitud, Double longitud){
         this.latitud = latitud;
         this.longitud = longitud;
 
+   }
+
+   public String calleAlturaCiudadPais(){
+        return this.calle + " " +  this.altura + ", " + this.ciudad + ", " + this.pais;
    }
 
     public void obtenerCoordenadas(GeoCoding geoCoding) {

@@ -2,12 +2,12 @@ package alojate.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @Data
+@NoArgsConstructor
 public class Destino {
     @Column
     private String nombre;
@@ -19,4 +19,10 @@ public class Destino {
 
     @Column
     private String ciudad;
+
+    public Destino (String nombre){
+        this.nombre = nombre;
+    }
+
+
 }

@@ -14,29 +14,6 @@ import java.util.List;
 @Repository
 public interface IReposPublicacion extends JpaRepository<Publicacion, Long> {
 
-//    @Query("""
-//    SELECT h
-//    FROM Hecho h
-//    JOIN Fuente f ON h.fuente.id = f.id
-//    WHERE (:categoria IS NULL OR UPPER(h.categoria.tipo) = :categoria)
-//      AND (:fechaReporteDesde IS NULL OR h.fechaDeCarga >= :fechaReporteDesde)
-//      AND (:fechaReporteHasta IS NULL OR h.fechaDeCarga <= :fechaReporteHasta)
-//      AND (:fechaAcontecimientoDesde IS NULL OR h.fechaDelHecho >= :fechaAcontecimientoDesde)
-//      AND (:fechaAcontecimientoHasta IS NULL OR h.fechaDelHecho <= :fechaAcontecimientoHasta)
-//      AND (:provincia IS NULL OR UPPER(h.ubicacion.provincia) = :provincia)
-//      AND (:fuente IS NULL OR UPPER(f.nombre) = :fuente)
-//      AND h.eliminado = false
-//""")
-//    Page<Hecho> filtrarPorParametros(
-//            String categoria,
-//            String fechaReporteDesde,
-//            String fechaReporteHasta,
-//            LocalDateTime fechaAcontecimientoDesde,
-//            LocalDateTime fechaAcontecimientoHasta,
-//            String provincia,
-//            String fuente,
-//            Pageable pageable
-//    );
     @Query("""
                 SELECT p
                 FROM Publicacion p

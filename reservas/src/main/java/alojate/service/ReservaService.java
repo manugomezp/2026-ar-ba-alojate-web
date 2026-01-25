@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class ReservaService {
 
-    private List<Reserva> reservas = new ArrayList<>();
+    private final List<Reserva> reservas = new ArrayList<>();
 
 
     public void alta(ReservaDTO dto) {
@@ -22,6 +22,16 @@ public class ReservaService {
                 dto.getCostoAbonado(), dto.getCostoPorAbonar(), destino, dto.getEstado());
         reservas.add(reserva);
     }
+    // SE PIDEN LAS PUBLICACIONES Y
+
+    // OPCIÓN 1
+        // PUBLICACIONES HACE UN GET A RESERVAS PARA CONOCER AQUELLAS PUBLICACIONES QUE
+        // NO ESTÁN DISPONIBLES EN LA FECHA DADA. OSEA, RESERVAS DEVUELVE UNA LISTA DE STRING DE DICHAS PUBLICACIONES.
+    // OPCIÓN 2
+        // PUBLICACIONES LLEVA REGISTRO DE LAS FECHAS EN LAS QUE UNA PUBLICACIÓN ESTÁ RESERVADA PARA NO MOSTRARLA COMO OPCIÓN
+    // PUEDE QUE LA OPCIÓN 2 SEA MEJOR PENSANDO EN RENDIMIENTO, PORQUE SE EXCUSA DE HACER UNA PETICIÓN A RESERVA Y QUE ESTA
+    // BUSQUE AQUELLAS IDS PARA FECHA Y LUGAR COINCIDENTE.
+    // CUANTAS PUBLICACIONES PUEDEN LLEGAR A SER SUBIDAS? 500? 1000? 2000? NO PARECE TANTO QUE PROCESAR.
 
 //    public OutReservaDTO devolver(Long reserva_id){
 //        Reserva reserva = reservas.stream()
