@@ -33,6 +33,9 @@ public class ReservaService {
     // BUSQUE AQUELLAS IDS PARA FECHA Y LUGAR COINCIDENTE.
     // CUANTAS PUBLICACIONES PUEDEN LLEGAR A SER SUBIDAS? 500? 1000? 2000? NO PARECE TANTO QUE PROCESAR.
 
+    // QUÉ ES MAS ESCALABLE? SOLICITAR A RESERVAS SIN PERSISTIR EN PUBLICACIONES
+    // O PERSISTIR EN PUBLICACIONES SIN CONSULTAR A RESERVAS?
+
 //    public OutReservaDTO devolver(Long reserva_id){
 //        Reserva reserva = reservas.stream()
 //                .filter(r -> r.getId().equals(reserva_id))

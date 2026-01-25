@@ -22,8 +22,8 @@ public class PublicacionDTO {
     private Double costoPorNoche;
     private String divisa;
     private String formaDePago;
-    private String checkIn;
-    private String checkOut;
+    private String horaDeEntrada;
+    private String horaDeSalida;
     private Boolean cancelacionGratuita;
     private LocalDateTime validaDesde;
     private LocalDateTime validaHasta;

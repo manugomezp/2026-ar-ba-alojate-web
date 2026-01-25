@@ -65,8 +65,8 @@ public class PublicacionService {
         p.setCantidad_adultos_maxima(dto.getCapacidad());
         p.setDescripcion(dto.getDescripcion());
         p.setCostoPorNoche(dto.getCostoPorNoche());
-        p.setCheckIn(dto.getCheckIn());
-        p.setCheckOut(dto.getCheckOut());
+        p.setHoraDeEntrada(dto.getHoraDeEntrada());
+        p.setHoraDeSalida(dto.getHoraDeSalida());
         p.setCancelacionGratuita(dto.getCancelacionGratuita());
         p.setValidaDesde(dto.getValidaDesde());
         p.setValidaHasta(dto.getValidaHasta());

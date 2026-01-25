@@ -43,9 +43,9 @@ public class Publicacion {
     @ManyToOne
     private FormaDePago formaDePago;
     @Column
-    private String checkIn;
+    private String horaDeEntrada;
     @Column
-    private String checkOut;
+    private String horaDeSalida;
     @Column
     private Boolean cancelacionGratuita;
     @Column
