@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Resenia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne
     private Reserva reserva;
     @Column

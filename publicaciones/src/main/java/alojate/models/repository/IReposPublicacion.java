@@ -6,6 +6,7 @@ import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.models.entities.publicacion.Publicacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -27,5 +28,8 @@ public interface IReposPublicacion extends JpaRepository<Publicacion, Long> {
             """)
     List<Publicacion> filtrar(String pais, String ciudad, LocalDateTime checkIn,
                               LocalDateTime checkOut, Integer adultos, Integer ambientes);
+
+
+
 
 }

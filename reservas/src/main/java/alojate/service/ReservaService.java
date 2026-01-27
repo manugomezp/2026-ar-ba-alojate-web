@@ -1,18 +1,25 @@
 package alojate.service;
 
 import alojate.models.dtos.ReservaDTO;
+import alojate.events.ReservaEvent;
 import alojate.models.entities.Destino;
 import alojate.models.entities.Reserva;
 import alojate.models.dtos.output.OutReservaDTO;
+import alojate.models.repository.IReposReserva;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ReservaService {
 
-    private final List<Reserva> reservas = new ArrayList<>();
+    private final IReposReserva reposReserva;
+    private final ReservaEventPublisher reservaEventPublisher;
+
+    public ReservaService(IReposReserva reposReserva, ReservaEventPublisher reservaEventPublisher) {
+        this.reposReserva = reposReserva;
+        this.reservaEventPublisher = reservaEventPublisher;
+    }
 
 
     public void alta(ReservaDTO dto) {
@@ -20,7 +27,10 @@ public class ReservaService {
         Reserva reserva = new Reserva(dto.getViajero_id(), dto.getPublicacion_id(),
                 dto.getNombre_publicacion(), dto.getNombre_viajero(),dto.getCheckIn(), dto.getCheckOut(),
                 dto.getCostoAbonado(), dto.getCostoPorAbonar(), destino, dto.getEstado());
-        reservas.add(reserva);
+
+        reposReserva.save(reserva);
+        reservaEventPublisher.publicarReservaCreada(new ReservaEvent(dto.getPublicacion_id(),
+                dto.getCheckIn().toLocalDate(), dto.getCheckOut().toLocalDate()));
     }
     // SE PIDEN LAS PUBLICACIONES Y
 
@@ -48,7 +58,7 @@ public class ReservaService {
 //    }
 
     public List<OutReservaDTO> devolverTodas(String viajero_id){
-        List<Reserva> reservasDe = reservas.stream()
+        List<Reserva> reservasDe = reposReserva.findAll().stream()
                 .filter(r -> r.getViajero_id().equals(viajero_id))
                 .toList();
 

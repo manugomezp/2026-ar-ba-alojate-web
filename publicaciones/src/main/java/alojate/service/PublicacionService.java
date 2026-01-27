@@ -1,17 +1,20 @@
 package alojate.service;
 
+import alojate.config.RabbitMQConfig;
 import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
+import alojate.events.ReservaEvent;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.models.entities.geocoding.GeoCoding;
 import alojate.models.entities.geocoding.GeoCodingHTTP;
-import alojate.models.entities.publicacion.Categoria;
-import alojate.models.entities.publicacion.Divisa;
 import alojate.models.entities.publicacion.Publicacion;
+import alojate.models.entities.publicacion.Reserva;
 import alojate.models.entities.publicacion.Ubicacion;
 import alojate.models.repository.IReposCategoria;
 import alojate.models.repository.IReposPublicacion;
+import alojate.models.repository.IReposReserva;
 import alojate.models.repository.IUbicacionRepos;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,7 +24,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,10 +34,11 @@ public class PublicacionService {
     private final IReposPublicacion reposPublicacion;
     private final IUbicacionRepos reposUbicacion;
     private final IReposCategoria reposCategoria;
+    private final IReposReserva reposReserva;
 
     private final GeoCoding geoCoding;
 
-    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria) {
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
@@ -43,6 +46,7 @@ public class PublicacionService {
         this.reposPublicacion = reposPublicacion;
         this.reposUbicacion = reposUbicacion;
         this.reposCategoria = reposCategoria;
+        this.reposReserva = reposReserva;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
     }
@@ -100,20 +104,28 @@ public class PublicacionService {
         System.out.println("SE CREO UNA PUBLICACION EN PUBLICACIONES ✔✔✔");
         reposPublicacion.save(p);
     }
+    public List<Publicacion> obtenerNoReservadas(QueryParamsPublicacion filtro, LocalDateTime checkInDateTime, LocalDateTime checkOutDateTime) {
+        List<Publicacion> publis = reposPublicacion.filtrar(filtro.getPais(), filtro.getCiudad(), checkInDateTime,
+                checkOutDateTime, filtro.getAdultos(), filtro.getAmbientes());
+
+        List<Long> publisReservadas = reposReserva.obtenerReservadas(publis.stream().map(Publicacion::getId).toList());
+
+        List<Long> publisIdsDispo = publis.stream()
+                .map(Publicacion::getId)
+                .filter(id -> publisReservadas.stream().noneMatch(res -> res.equals(id)))
+                .toList();
+
+        return reposPublicacion.findAllById(publisIdsDispo);
+    }
 
     public List<OutPublicacionSimple> obtener(QueryParamsPublicacion filtro) {
         LocalDate checkInDate = LocalDate.parse(filtro.getCheckIn());
         LocalDate checkOutDate = LocalDate.parse(filtro.getCheckOut());
-
         LocalDateTime checkInDateTime = checkInDate.atTime(14, 0);
         LocalDateTime checkOutDateTime = checkOutDate.atTime(11, 0);
-
-        List<Publicacion> publis = reposPublicacion.filtrar(filtro.getPais(), filtro.getCiudad(), checkInDateTime,
-                checkOutDateTime, filtro.getAdultos(), filtro.getAmbientes());
-
         System.out.println("ESTOY POR DEVOLVER LAS PUBLICACIONES CAPO.");
 
-        return publis.stream().map(this::toOutPublicacionSimple).toList();
+        return obtenerNoReservadas(filtro,checkInDateTime,checkOutDateTime ).stream().map(this::toOutPublicacionSimple).toList();
     }
 
     public OutPublicacionSimple toOutPublicacionSimple(Publicacion p){
@@ -130,15 +142,25 @@ public class PublicacionService {
         );
     }
 
-
-
-
     public List<String> obtenerDisponibles(){
         ServiceInstance serviceInstance = discoveryClient.getInstances("reservas").get(0);
         return restClient.get()
                 .uri(serviceInstance.getUri() + "/api/publicaciones-reservadas")
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<String>>() {});
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_PUBLICACIONES)
+    public void onReservaCreada(ReservaEvent event) {
+        System.out.println("Reserva recibida: " + event);
+
+       Publicacion publicacion = reposPublicacion
+                .findById(Long.parseLong(event.getPublicacion_id()))
+                .orElseThrow(() -> new RuntimeException("Publicación no encontrada"));
+
+       System.out.println("ESTOY CONSUMIENDO LA COLA DE RESERVAS");
+
+       reposReserva.save(new Reserva(publicacion, event.getDesde(), event.getHasta()));
     }
 
 

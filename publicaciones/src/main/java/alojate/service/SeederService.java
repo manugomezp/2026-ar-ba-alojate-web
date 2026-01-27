@@ -89,7 +89,6 @@ public class SeederService implements CommandLineRunner {
         Ubicacion u20 = new Ubicacion("Av. Juan B. Justo", "5200", "1414",
                 "Argentina", "Buenos Aires", "Buenos Aires");
 
-        ubicacionRepos.saveAll(List.of(u11, u12, u13, u14, u15, u16, u17, u18, u19, u20));
 
 
         LocalDateTime desde = LocalDateTime.now();
@@ -164,9 +163,57 @@ public class SeederService implements CommandLineRunner {
         Publicacion p20 = new Publicacion( "Mini loft urbano", desdeBA, hastaBA,
                 2, 1, euro, 80.0, u20, loft);
 
-        reposPublicacion.saveAll(List.of(p11,p12,p13,p14,p15,p16,p17,p18,p19,p20));
 
 
+        Ubicacion u21 = new Ubicacion(
+                "Av. Patricio Peralta Ramos",
+                "2500",
+                "7600",
+                "Argentina",
+                "Buenos Aires",
+                "Mar del Plata"
+        );
+
+        Ubicacion u22 = new Ubicacion(
+                "Calle Alem",
+                "4200",
+                "7600",
+                "Argentina",
+                "Buenos Aires",
+                "Mar del Plata"
+        );
+
+        ubicacionRepos.saveAll(List.of(u11, u12, u13, u14, u15,
+                u16, u17, u18, u19, u20, u21, u22));
+
+        LocalDateTime desdeMDQ = LocalDateTime.of(2026, 4, 10, 0, 0);
+        LocalDateTime hastaMDQ = LocalDateTime.of(2026, 6, 10, 23, 59);
+
+
+        Publicacion p21 = new Publicacion(
+                "Depto con vista al mar",
+                desdeMDQ,
+                hastaMDQ,
+                4,              // adultos
+                2,              // ambientes
+                euro,
+                110.0,
+                u21,
+                depto
+        );
+
+        Publicacion p22 = new Publicacion(
+                "Monoambiente turístico",
+                desdeMDQ,
+                hastaMDQ,
+                2,              // adultos
+                1,              // ambientes
+                euro,
+                75.0,
+                u22,
+                depto
+        );
+        reposPublicacion.saveAll(List.of(p11,p12,p13,p14,p15,p16,p17,p18,p19,p20, p21, p22));
 
     }
 
