@@ -17,4 +17,6 @@ public interface IReposReserva extends JpaRepository<Reserva, Long> {
         WHERE r.publicacion.id IN :ids
     """)
     List<Long> obtenerReservadas(@Param("ids") List<Long> ids);
+
+
 }

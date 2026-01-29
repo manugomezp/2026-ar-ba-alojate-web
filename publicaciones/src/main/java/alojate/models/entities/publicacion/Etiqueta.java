@@ -19,4 +19,7 @@ public class Etiqueta {
     @Column
     private String logo;
 
+    public Etiqueta(String nombre) {
+        this.nombre = nombre;
+    }
 }

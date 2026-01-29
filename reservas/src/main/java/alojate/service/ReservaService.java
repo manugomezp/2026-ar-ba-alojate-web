@@ -1,24 +1,33 @@
 package alojate.service;
 
+import alojate.models.dtos.ReseniaDTO;
 import alojate.models.dtos.ReservaDTO;
 import alojate.events.ReservaEvent;
+import alojate.models.dtos.output.OutReseniaDTO;
 import alojate.models.entities.Destino;
+import alojate.models.entities.Puntaje;
+import alojate.models.entities.Resenia;
 import alojate.models.entities.Reserva;
 import alojate.models.dtos.output.OutReservaDTO;
+import alojate.models.repository.IReposResenia;
 import alojate.models.repository.IReposReserva;
+import org.hibernate.dialect.function.SybaseTruncFunction;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservaService {
 
     private final IReposReserva reposReserva;
     private final ReservaEventPublisher reservaEventPublisher;
+    private final IReposResenia iReposResenia;
 
-    public ReservaService(IReposReserva reposReserva, ReservaEventPublisher reservaEventPublisher) {
+    public ReservaService(IReposReserva reposReserva, ReservaEventPublisher reservaEventPublisher, IReposResenia iReposResenia) {
         this.reposReserva = reposReserva;
         this.reservaEventPublisher = reservaEventPublisher;
+        this.iReposResenia = iReposResenia;
     }
 
 
@@ -32,19 +41,7 @@ public class ReservaService {
         reservaEventPublisher.publicarReservaCreada(new ReservaEvent(dto.getPublicacion_id(),
                 dto.getCheckIn().toLocalDate(), dto.getCheckOut().toLocalDate()));
     }
-    // SE PIDEN LAS PUBLICACIONES Y
 
-    // OPCIÓN 1
-        // PUBLICACIONES HACE UN GET A RESERVAS PARA CONOCER AQUELLAS PUBLICACIONES QUE
-        // NO ESTÁN DISPONIBLES EN LA FECHA DADA. OSEA, RESERVAS DEVUELVE UNA LISTA DE STRING DE DICHAS PUBLICACIONES.
-    // OPCIÓN 2
-        // PUBLICACIONES LLEVA REGISTRO DE LAS FECHAS EN LAS QUE UNA PUBLICACIÓN ESTÁ RESERVADA PARA NO MOSTRARLA COMO OPCIÓN
-    // PUEDE QUE LA OPCIÓN 2 SEA MEJOR PENSANDO EN RENDIMIENTO, PORQUE SE EXCUSA DE HACER UNA PETICIÓN A RESERVA Y QUE ESTA
-    // BUSQUE AQUELLAS IDS PARA FECHA Y LUGAR COINCIDENTE.
-    // CUANTAS PUBLICACIONES PUEDEN LLEGAR A SER SUBIDAS? 500? 1000? 2000? NO PARECE TANTO QUE PROCESAR.
-
-    // QUÉ ES MAS ESCALABLE? SOLICITAR A RESERVAS SIN PERSISTIR EN PUBLICACIONES
-    // O PERSISTIR EN PUBLICACIONES SIN CONSULTAR A RESERVAS?
 
 //    public OutReservaDTO devolver(Long reserva_id){
 //        Reserva reserva = reservas.stream()
@@ -57,7 +54,7 @@ public class ReservaService {
 //                reserva.getDestino().getNombre(), reserva.getEstado().toString());
 //    }
 
-    public List<OutReservaDTO> devolverTodas(String viajero_id){
+    public List<OutReservaDTO> devolverReservasDeViajero(String viajero_id){
         List<Reserva> reservasDe = reposReserva.findAll().stream()
                 .filter(r -> r.getViajero_id().equals(viajero_id))
                 .toList();
@@ -69,6 +66,31 @@ public class ReservaService {
         System.out.println("ESTE ES EL NOMBRE DEL VIAJERO:" + reserva.getNombre_viajero());
         return new OutReservaDTO(reserva.getNombre_publicacion(), reserva.getCheckIn(), reserva.getCheckOut(),
                 "Un Destino", reserva.getEstado().toString());
+    }
+
+    public void alta(ReseniaDTO dto){
+        try{
+            iReposResenia.save(new Resenia(
+                    reposReserva.findById(dto.getReserva_id()).get(),
+                    dto.getResenia(),
+                    Puntaje.valueOf(dto.getPuntaje())));
+        }
+        catch (NoSuchElementException n){
+            System.out.println("La resenia no fue cargada pues no pudo ser asociada a ninguna reserva.");
+        };
+
+    }
+
+    public List<OutReseniaDTO> devolverReseniasDePublicacion(String public_id){
+        List<Reserva> reservas = reposReserva.findByPublicacionId(public_id);
+
+        List<Resenia> resenias = iReposResenia.findAllByReservas(reservas);
+
+        return resenias.stream().map(this::reseniaToDTO).toList();
+    }
+
+    public OutReseniaDTO reseniaToDTO(Resenia resenia){
+        return new OutReseniaDTO(resenia.getResenia(), resenia.getPuntaje().toString(), resenia.getReserva().getNombre_viajero());
     }
 
 }

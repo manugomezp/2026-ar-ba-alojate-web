@@ -1,6 +1,7 @@
 package alojate.models.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,9 @@ public class Resenia {
     @Enumerated(EnumType.STRING)
     private Puntaje puntaje;
 
+    public Resenia(Reserva reserva, String resenia, Puntaje puntaje) {
+        this.reserva = reserva;
+        this.resenia = resenia;
+        this.puntaje = puntaje;
+    }
 }

@@ -1,6 +1,8 @@
 package alojate.controller;
 
+import alojate.models.dtos.ReseniaDTO;
 import alojate.models.dtos.ReservaDTO;
+import alojate.models.dtos.output.OutReseniaDTO;
 import alojate.models.dtos.output.OutReservaDTO;
 import alojate.models.entities.Reserva;
 import alojate.service.ReservaService;
@@ -19,12 +21,6 @@ public class ContUsuarios{
         this.reservaService = reservaService;
     }
 
-//
-//    @GetMapping("/api/reservas")
-//    public String reservas() {
-//        return "Hola desde reservas!";
-//    }
-
     @GetMapping("/api/publicaciones-reservadas")
     public List<String> publicacionesReservadas(){
         Reserva reserva = new Reserva("azkaban33344312");
@@ -39,8 +35,18 @@ public class ContUsuarios{
     }
 
     @GetMapping("/api/reservas")
-    public List<OutReservaDTO> devolverTodas(@RequestParam("viajero_id") String id_viajero ){
-        return reservaService.devolverTodas(id_viajero);
+    public List<OutReservaDTO> devolverReservasDeViajero(@RequestParam("viajero_id") String id_viajero ){
+        return reservaService.devolverReservasDeViajero(id_viajero);
+    }
+
+    @PostMapping("/api/reservas/resenias")
+    public void alta(@RequestBody ReseniaDTO reseniaDTO){
+        reservaService.alta(reseniaDTO);
+    }
+
+    @GetMapping("/api/reservas/resenias/")
+    public List<OutReseniaDTO> devolverReseniasDePublicacion(@RequestParam("publicacion_id") String id_publicacion){
+        return reservaService.devolverReseniasDePublicacion(id_publicacion);
     }
 
 

@@ -1,13 +1,7 @@
 package alojate.service;
 
-import alojate.models.entities.publicacion.Categoria;
-import alojate.models.entities.publicacion.Divisa;
-import alojate.models.entities.publicacion.Publicacion;
-import alojate.models.entities.publicacion.Ubicacion;
-import alojate.models.repository.IReposCategoria;
-import alojate.models.repository.IReposDivisa;
-import alojate.models.repository.IReposPublicacion;
-import alojate.models.repository.IUbicacionRepos;
+import alojate.models.entities.publicacion.*;
+import alojate.models.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
@@ -26,6 +20,8 @@ public class SeederService implements CommandLineRunner {
     private IReposCategoria reposCategoria;
     @Autowired
     private IReposPublicacion reposPublicacion;
+    @Autowired
+    private IReposEtiqueta reposEtiqueta;
 
     public void init(){
         // CATEGORIA
@@ -214,6 +210,40 @@ public class SeederService implements CommandLineRunner {
                 depto
         );
         reposPublicacion.saveAll(List.of(p11,p12,p13,p14,p15,p16,p17,p18,p19,p20, p21, p22));
+
+        Etiqueta wifi = new Etiqueta("WIFI");
+        Etiqueta cocina = new Etiqueta("COCINA");
+        Etiqueta jardin = new Etiqueta("JARDIN");
+        Etiqueta ascensor = new Etiqueta("ASCENSOR");
+        Etiqueta microondas = new Etiqueta("MICROONDAS");
+        Etiqueta pavaElectrica = new Etiqueta("PAVA ELÉCTRICA");
+        Etiqueta aireAcondicionado = new Etiqueta("AIRE ACONDICIONADO");
+        Etiqueta tv = new Etiqueta("TV");
+        Etiqueta heladera = new Etiqueta("HELADERA");
+        Etiqueta calefaccion = new Etiqueta("CALEFACCION");
+        Etiqueta purificadorAire = new Etiqueta("PURIFICADOR DE AIRE");
+        Etiqueta luzEmergencia = new Etiqueta("LUZ DE EMERGENCIA");
+        Etiqueta camaDoble = new Etiqueta("CAMA DOBLE");
+        Etiqueta camaSimple = new Etiqueta("CAMA SIMPLE");
+
+        reposEtiqueta.saveAll(List.of(
+                wifi,
+                cocina,
+                jardin,
+                ascensor,
+                microondas,
+                pavaElectrica,
+                aireAcondicionado,
+                tv,
+                heladera,
+                calefaccion,
+                purificadorAire,
+                luzEmergencia,
+                camaDoble,
+                camaSimple
+        ));
+
+
 
     }
 
