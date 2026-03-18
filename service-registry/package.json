@@ -1,0 +1,14 @@
+{
+  "name": "service-registry",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manugomezp/2026-ar-ba-alojate-web.git"
+  },
+  "private": true
+}
