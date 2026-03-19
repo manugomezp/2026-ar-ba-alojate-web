@@ -22,6 +22,8 @@ public class SeederService implements CommandLineRunner {
     private IReposPublicacion reposPublicacion;
     @Autowired
     private IReposEtiqueta reposEtiqueta;
+    @Autowired
+    private IRepoMultimedia iRepoMultimedia;
 
     public void init(){
         // CATEGORIA
@@ -91,6 +93,8 @@ public class SeederService implements CommandLineRunner {
         LocalDateTime hasta = desde.plusMonths(6);
 
 // 🔹 5 publicaciones con 2 ambientes
+
+
         Publicacion p1 = new Publicacion( "Casa frente al mar", desde, hasta,
                 4, 2, euro, 120.0, u1, casa);
 
@@ -186,7 +190,15 @@ public class SeederService implements CommandLineRunner {
         LocalDateTime hastaMDQ = LocalDateTime.of(2026, 6, 10, 23, 59);
 
 
-        Publicacion p21 = new Publicacion(
+
+        Multimedia kitchen = new Multimedia(TipoArchivo.FOTO, "/static/kitchen.jpg");
+        Multimedia room = new  Multimedia(TipoArchivo.FOTO, "/static/room.jpg");
+        Multimedia living_room = new  Multimedia(TipoArchivo.FOTO, "/static/living-room.jpg");
+        Multimedia living_room2 = new  Multimedia(TipoArchivo.FOTO, "/static/living-room-2.jpg");
+
+        iRepoMultimedia.saveAll(List.of(kitchen, room, living_room, living_room2));
+
+        Publicacion p21 = new Publicacion( List.of(kitchen, room, living_room, living_room2),
                 "Depto con vista al mar",
                 desdeMDQ,
                 hastaMDQ,

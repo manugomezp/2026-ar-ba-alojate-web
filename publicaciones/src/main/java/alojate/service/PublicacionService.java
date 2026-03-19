@@ -7,13 +7,11 @@ import alojate.events.ReservaEvent;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.models.entities.geocoding.GeoCoding;
 import alojate.models.entities.geocoding.GeoCodingHTTP;
+import alojate.models.entities.publicacion.Multimedia;
 import alojate.models.entities.publicacion.Publicacion;
 import alojate.models.entities.publicacion.Reserva;
 import alojate.models.entities.publicacion.Ubicacion;
-import alojate.models.repository.IReposCategoria;
-import alojate.models.repository.IReposPublicacion;
-import alojate.models.repository.IReposReserva;
-import alojate.models.repository.IUbicacionRepos;
+import alojate.models.repository.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -35,10 +33,11 @@ public class PublicacionService {
     private final IUbicacionRepos reposUbicacion;
     private final IReposCategoria reposCategoria;
     private final IReposReserva reposReserva;
+    private final IRepoMultimedia iRepoMultimedia;
 
     private final GeoCoding geoCoding;
 
-    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva) {
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
@@ -47,6 +46,7 @@ public class PublicacionService {
         this.reposUbicacion = reposUbicacion;
         this.reposCategoria = reposCategoria;
         this.reposReserva = reposReserva;
+        this.iRepoMultimedia = iRepoMultimedia;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
     }
@@ -119,6 +119,7 @@ public class PublicacionService {
     }
 
     public List<OutPublicacionSimple> obtener(QueryParamsPublicacion filtro) {
+        // TODO CONSIDERAR EL CASO EN EL QUE EL FILTRO TENGA VALORES NULOS //
         LocalDate checkInDate = LocalDate.parse(filtro.getCheckIn());
         LocalDate checkOutDate = LocalDate.parse(filtro.getCheckOut());
         LocalDateTime checkInDateTime = checkInDate.atTime(14, 0);
@@ -133,7 +134,8 @@ public class PublicacionService {
 //        System.out.println("LONGITUD" + p.getUbicacion().getLongitud().toString());
 
         return new OutPublicacionSimple(
-                "Una foto de la casa",
+                p.getId(),
+                p.getMultimedia().stream().map(Multimedia::getId).toList(),
                 p.getPuntaje(),
                 p.getDivisa().getNombre() + p.getCostoPorNoche().toString(),
                 p.getTitulo(),
@@ -141,7 +143,10 @@ public class PublicacionService {
                 p.getUbicacion().calleAlturaCiudadPais()
         );
     }
-
+    public String getImageById(Long id){
+        System.out.println(iRepoMultimedia.findUrlBy(id));
+        return iRepoMultimedia.findUrlBy(id);
+    }
     public List<String> obtenerDisponibles(){
         ServiceInstance serviceInstance = discoveryClient.getInstances("reservas").get(0);
         return restClient.get()

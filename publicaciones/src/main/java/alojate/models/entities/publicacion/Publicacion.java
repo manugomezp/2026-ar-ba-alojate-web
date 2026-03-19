@@ -79,4 +79,21 @@ public class Publicacion {
         this.categoria = categoria;
     }
 
+    public Publicacion(List<Multimedia> multimedia, String titulo, LocalDateTime desde, LocalDateTime hasta,
+                       Integer adultos, Integer ambientes, Divisa divisa, Double costoPorNoche,
+                       Ubicacion ubicacion, Categoria categoria)
+    {
+        this.titulo = titulo;
+        this.validaDesde = desde;
+        this.validaHasta = hasta;
+        this.cantidad_ambientes = ambientes;
+        this.cantidad_adultos_maxima = adultos;
+        this.estado = Estado.ABIERTA;
+        this.costoPorNoche = costoPorNoche;
+        this.divisa = divisa;
+        this.ubicacion = ubicacion;
+        this.categoria = categoria;
+        this.multimedia = multimedia;
+    }
+
 }

@@ -16,4 +16,9 @@ public class Multimedia {
     private TipoArchivo tipo;
     @Column
     private String url;
+
+    public Multimedia(TipoArchivo tipo, String url) {
+        this.tipo = tipo;
+        this.url = url;
+    }
 }

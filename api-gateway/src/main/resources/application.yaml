@@ -9,9 +9,10 @@ spring:
             - id: publicaciones
               uri: lb://publicaciones
               predicates:
-                - Path=/alojate/publicaciones/**, /images/**
+                - Path=/alojate/publicaciones/**, /alojate/multimedia/**
               filters:
                 - RewritePath=/alojate/publicaciones(?<segment>.*), /api/publicaciones${segment}
+                - RewritePath=/alojate/multimedia(?<segment>.*), /api/multimedia${segment}
             - id: reservas
               uri: lb://reservas
               predicates:
@@ -24,6 +25,14 @@ spring:
                 - Path=/alojate/usuarios/**
               filters:
                 - RewritePath=/alojate/usuarios(?<segment>.*), /api/usuarios${segment}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-h3xrizjs1bocf38m.us.auth0.com/
+          audiences: https://localhost:8080
+auth0:
+  audience: https://localhost:8080
 server:
   port: 8080
 

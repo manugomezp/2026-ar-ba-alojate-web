@@ -20,6 +20,10 @@ public class Usuario {
     @Column(name = "nombre_completo", nullable = false)
     private String nombreCompleto;
 
+
+    @Column
+    private String auth0_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Nacionalidad nacionalidad;
 
