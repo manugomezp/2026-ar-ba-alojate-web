@@ -78,13 +78,13 @@ public class ContUsuarios {
                 .body(resource);
     }
 
-    @PostMapping("/api/favorito")
+    @PostMapping("/api/favoritos")
     public void nuevoFavorito(@RequestParam String user_id,
                               @RequestParam Long publicacion_id){
         publicacionService.agregarFavorito(user_id, publicacion_id);
     }
 
-    @GetMapping("/api/favorito")
+    @GetMapping("/api/favoritos")
     public List<FavoritoDTO> favoritos(String user_id){
         return publicacionService.favoritos(user_id);
     }
