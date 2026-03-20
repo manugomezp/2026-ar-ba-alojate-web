@@ -4,13 +4,11 @@ import alojate.config.RabbitMQConfig;
 import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
 import alojate.events.ReservaEvent;
+import alojate.models.dtos.output.FavoritoDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.models.entities.geocoding.GeoCoding;
 import alojate.models.entities.geocoding.GeoCodingHTTP;
-import alojate.models.entities.publicacion.Multimedia;
-import alojate.models.entities.publicacion.Publicacion;
-import alojate.models.entities.publicacion.Reserva;
-import alojate.models.entities.publicacion.Ubicacion;
+import alojate.models.entities.publicacion.*;
 import alojate.models.repository.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.cloud.client.ServiceInstance;
@@ -34,10 +32,11 @@ public class PublicacionService {
     private final IReposCategoria reposCategoria;
     private final IReposReserva reposReserva;
     private final IRepoMultimedia iRepoMultimedia;
+    private final IRepoFavoritos iRepoFavorito;
 
     private final GeoCoding geoCoding;
 
-    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia) {
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia, IRepoFavoritos iRepoFavorito) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
@@ -47,6 +46,7 @@ public class PublicacionService {
         this.reposCategoria = reposCategoria;
         this.reposReserva = reposReserva;
         this.iRepoMultimedia = iRepoMultimedia;
+        this.iRepoFavorito = iRepoFavorito;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
     }
@@ -117,6 +117,25 @@ public class PublicacionService {
 
         return reposPublicacion.findAllById(publisIdsDispo);
     }
+
+    public void agregarFavorito(String user_id, Long pub_id){
+        Publicacion publicacion = reposPublicacion.findById(pub_id).get();
+        Favorito favorito = new Favorito(user_id, publicacion);
+        iRepoFavorito.save(favorito);
+    }
+    public List<FavoritoDTO> favoritos(String user_id){
+        List<Favorito> favoritos = iRepoFavorito.findAllByUserId(user_id);
+        return favoritos.stream().map(this::favToDTO).toList();
+    }
+
+    public FavoritoDTO favToDTO(Favorito f){
+        FavoritoDTO dto = new FavoritoDTO();
+        dto.setPublicacion_nombre(f.getNombre());
+        dto.setPuntaje(f.getPuntaje());
+
+        return dto;
+    }
+
 
     public List<OutPublicacionSimple> obtener(QueryParamsPublicacion filtro) {
         // TODO CONSIDERAR EL CASO EN EL QUE EL FILTRO TENGA VALORES NULOS //

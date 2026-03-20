@@ -3,18 +3,15 @@ package alojate.controller;
 
 import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
+import alojate.models.dtos.output.FavoritoDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.service.PublicacionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -68,7 +65,7 @@ public class ContUsuarios {
     }
 
     @GetMapping("/api/multimedia")
-    public ResponseEntity<Resource> getImagen(@RequestParam Long id) throws IOException {
+    public ResponseEntity<Resource> getImagen(@RequestParam Long id) {
         String filename = publicacionService.getImageById(id);
         Resource resource = new ClassPathResource(filename);
 
@@ -80,6 +77,18 @@ public class ContUsuarios {
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(resource);
     }
+
+    @PostMapping("/api/favorito")
+    public void nuevoFavorito(@RequestParam String user_id,
+                              @RequestParam Long publicacion_id){
+        publicacionService.agregarFavorito(user_id, publicacion_id);
+    }
+
+    @GetMapping("/api/favorito")
+    public List<FavoritoDTO> favoritos(String user_id){
+        return publicacionService.favoritos(user_id);
+    }
+
 
 
 
