@@ -119,8 +119,11 @@ public class PublicacionService {
     }
 
     public void agregarFavorito(String user_id, Long pub_id){
+        System.out.println("SE ESTÁ POR AGREGAR UN FAVORITO");
         Publicacion publicacion = reposPublicacion.findById(pub_id).get();
         Favorito favorito = new Favorito(user_id, publicacion);
+        System.out.println("SE AGREGÓ NOMAS; SU ID ES: " + publicacion.getId());
+
         iRepoFavorito.save(favorito);
     }
     public List<FavoritoDTO> favoritos(String user_id){
@@ -143,7 +146,7 @@ public class PublicacionService {
         LocalDate checkOutDate = LocalDate.parse(filtro.getCheckOut());
         LocalDateTime checkInDateTime = checkInDate.atTime(14, 0);
         LocalDateTime checkOutDateTime = checkOutDate.atTime(11, 0);
-        System.out.println("ESTOY POR DEVOLVER LAS PUBLICACIONES CAPO.");
+      //  System.out.println("ESTOY POR DEVOLVER LAS PUBLICACIONES CAPO.");
 
         return obtenerNoReservadas(filtro,checkInDateTime,checkOutDateTime ).stream().map(this::toOutPublicacionSimple).toList();
     }

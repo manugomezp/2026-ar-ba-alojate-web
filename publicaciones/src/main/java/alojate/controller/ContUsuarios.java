@@ -80,8 +80,10 @@ public class ContUsuarios {
 
     @PostMapping("/api/favoritos")
     public void nuevoFavorito(@RequestParam String user_id,
-                              @RequestParam Long publicacion_id){
-        publicacionService.agregarFavorito(user_id, publicacion_id);
+                              @RequestParam String publicacion_id){
+        System.out.println("ESTOY EN EL CONTROLADOR nuevoFavorito.");
+        Long pub_id = Long.parseLong(publicacion_id);
+        publicacionService.agregarFavorito(user_id,pub_id);
     }
 
     @GetMapping("/api/favoritos")

@@ -30,27 +30,15 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuer;
 
-//    @Bean
-//    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-//        return http
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-//                .authorizeExchange(exchange -> exchange
-//                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        .pathMatchers(HttpMethod.GET,"/alojate/publicaciones/**").permitAll()
-//                        .anyExchange().authenticated()
-//                )
-//                .oauth2ResourceServer(oauth2 ->
-//                        oauth2.jwt(jwt -> jwt.jwtDecoder(jwtDecoder()))
-//                )
-//                .build();
-//    }
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .cors(cors -> cors.configurationSource(request -> {
+                    System.out.println(">>> CORS request origin: " + request.getRequest().getHeaders().getOrigin());
+                    System.out.println(">>> CORS request method: " + request.getRequest().getMethod());
+                    System.out.println(">>> CORS request path: " + request.getRequest().getPath());
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+                    configuration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
                     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     configuration.setAllowedHeaders(List.of("*"));
                     configuration.setAllowCredentials(true);
@@ -59,40 +47,16 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/alojate/publicaciones/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/alojate/multimedia/**").permitAll()
-                        .anyExchange().authenticated()
+                        .pathMatchers(HttpMethod.GET,  "/alojate/publicaciones/**").permitAll()
+                        .pathMatchers(HttpMethod.GET,  "/alojate/multimedia/**").permitAll()
+                        .pathMatchers(HttpMethod.GET,  "/alojate/favoritos", "/alojate/favoritos/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/alojate/favoritos", "/alojate/favoritos/**").permitAll()
+                        .anyExchange().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwt -> jwt.jwtDecoder(jwtDecoder()))
                 )
                 .build();
-    }
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        configuration.setAllowedHeaders(List.of("*"));
-//        configuration.setAllowCredentials(true);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
-    @Bean
-    public CorsWebFilter corsWebFilter() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return new CorsWebFilter(source);
     }
 
     @Bean
@@ -120,4 +84,19 @@ public class SecurityConfig {
         decoder.setJwtValidator(validator);
         return decoder;
     }
+
+    @Bean
+    public CorsWebFilter corsWebFilter() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return new CorsWebFilter(source);
+    }
+
 }
