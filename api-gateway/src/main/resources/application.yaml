@@ -9,12 +9,12 @@ spring:
             - id: publicaciones
               uri: lb://publicaciones
               predicates:
-                - Path=/alojate/publicaciones/**, /alojate/imagenes/**,
+                - Path=/alojate/publicaciones/**,
                   /alojate/favoritos/** , /alojate/favoritos
               filters:
                 - RewritePath=/alojate/publicaciones(?<segment>.*), /api/publicaciones${segment}
-                - RewritePath=/alojate/imagenes(?<segment>.*), /api/imagenes{segment}
                 - RewritePath=/alojate/favoritos(?<segment>.*), /api/favoritos${segment}
+                - name: PreserveHostHeader
             - id: reservas
               uri: lb://reservas
               predicates:
@@ -27,19 +27,23 @@ spring:
                 - Path=/alojate/usuarios/**
               filters:
                 - RewritePath=/alojate/usuarios(?<segment>.*), /api/usuarios${segment}
+      httpclient:
+        max-in-memory-size: 100MB
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: https://dev-h3xrizjs1bocf38m.us.auth0.com/
           audiences: https://localhost:8080
+  http:
+    codecs:
+      max-in-memory-size: 100MB
 auth0:
   audience: https://localhost:8080
 server:
   port: 8080
 logging:
   level:
-    org.springframework.cloud.gateway: TRACE
-    org.springframework.security: TRACE
-    reactor.netty: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.multipart: DEBUG
 

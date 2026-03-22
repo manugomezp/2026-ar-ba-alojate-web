@@ -27,10 +27,10 @@ public class SeederService implements CommandLineRunner {
 
     public void init(){
         // CATEGORIA
-        Categoria casa = new Categoria( "Casa");
-        Categoria depto = new Categoria("Depto");
-        Categoria hotel = new Categoria("Hotel");
-        Categoria loft = new Categoria("Loft");
+        Categoria casa = new Categoria( "CASA");
+        Categoria depto = new Categoria("DEPTO");
+        Categoria hotel = new Categoria("HOTEL");
+        Categoria loft = new Categoria("LOFT");
 
         reposCategoria.saveAll(List.of(casa, depto, hotel, loft));
 

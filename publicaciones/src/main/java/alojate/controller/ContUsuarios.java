@@ -44,9 +44,8 @@ public class ContUsuarios {
         publicacionService.altaDeDatos(dto);
     }
 
-    @PostMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/api/publicaciones", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PublicacionDTO> crearPublicacion(
-            @PathVariable Long userId,
             @RequestPart("datos") PublicacionDTO datos,
             @RequestPart(value = "imagenes", required = false) List<MultipartFile> imagenes) throws IOException {
         publicacionService.alta(datos, imagenes);

@@ -16,7 +16,7 @@ public class Multimedia {
     private TipoArchivo tipo;
     @Column
     private String url;
-    @OneToOne
+    @ManyToOne
     private Publicacion publicacion;
 
     public Multimedia(TipoArchivo tipo, String url) {

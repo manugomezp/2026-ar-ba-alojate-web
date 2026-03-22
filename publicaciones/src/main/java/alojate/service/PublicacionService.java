@@ -1,17 +1,13 @@
 package alojate.service;
 
-import alojate.config.RabbitMQConfig;
-import alojate.models.dtos.input.MultimediaDTO;
+
 import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
-import alojate.events.ReservaEvent;
-import alojate.models.dtos.output.FavoritoDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
 import alojate.models.entities.geocoding.GeoCoding;
 import alojate.models.entities.geocoding.GeoCodingHTTP;
 import alojate.models.entities.publicacion.*;
 import alojate.models.repository.*;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,13 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class PublicacionService {
@@ -85,6 +77,8 @@ public class PublicacionService {
         u.obtenerCoordenadas(geoCoding);
         reposUbicacion.save(u);
 
+        p.setAnfitrion_id(dto.getAnfitrion_id());
+        p.setCategoria(reposCategoria.getCategoriaBy(dto.getCategoria().toUpperCase()));
         p.setTitulo(dto.getTitulo());
         p.setUbicacion(u);
         p.setAnfitrion_id(dto.getAnfitrion_id());
@@ -93,9 +87,8 @@ public class PublicacionService {
         p.setCostoPorNoche(dto.getCostoPorNoche());
         p.setHoraDeEntrada(dto.getHoraDeEntrada());
         p.setHoraDeSalida(dto.getHoraDeSalida());
-        p.setCancelacionGratuita(dto.getCancelacionGratuita());
-        p.setValidaDesde(dto.getValidaDesde());
-        p.setValidaHasta(dto.getValidaHasta());
+        p.setValidaDesde(dto.getValidaDesde().atStartOfDay());
+        p.setValidaHasta(dto.getValidaHasta().atStartOfDay());
 
 //        // String -> Enum (se asume válido o null)
 //        p.setCategoria(dto.getCategoria() != null

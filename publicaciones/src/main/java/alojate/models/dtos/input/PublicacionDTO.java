@@ -1,7 +1,9 @@
 package alojate.models.dtos.input;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,9 +25,9 @@ public class PublicacionDTO {
     private String formaDePago;
     private String horaDeEntrada;
     private String horaDeSalida;
-    private Boolean cancelacionGratuita;
-    private LocalDateTime validaDesde;
-    private LocalDateTime validaHasta;
-
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate validaDesde;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate validaHasta;
+    private List<String> etiquetas;
 }

@@ -45,13 +45,12 @@ public class Publicacion {
     @Column
     private String horaDeSalida;
     @Column
-    private Boolean cancelacionGratuita;
-    @Column
     private LocalDateTime validaDesde;
     @Column
     private LocalDateTime validaHasta;
     @Column
     private String puntaje;
+
     @ManyToMany
     @JoinTable(
             name = "publicacion_etiqueta",
