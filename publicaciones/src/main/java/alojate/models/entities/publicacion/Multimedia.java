@@ -16,9 +16,15 @@ public class Multimedia {
     private TipoArchivo tipo;
     @Column
     private String url;
+    @OneToOne
+    private Publicacion publicacion;
 
     public Multimedia(TipoArchivo tipo, String url) {
         this.tipo = tipo;
+        this.url = url;
+    }
+    public Multimedia(Publicacion publicacion, String url) {
+        this.publicacion = publicacion;
         this.url = url;
     }
 }

@@ -12,9 +12,9 @@ public class OutPublicacionSimple {
     private String descripcion; // 30 caracteres máx
     private String categoria; // si es casa, departamento, etc.
     private String destino;
-    private List<Long> multimedia;
+    private List<String> multimedia;
 
-    public OutPublicacionSimple(Long id, List<Long> multimedia, String puntaje, String precioPorNoche,
+    public OutPublicacionSimple(Long id, List<String> multimedia, String puntaje, String precioPorNoche,
                                 String descripcion, String categoria, String destino ) {
         this.puntaje = puntaje;
         this.precioPorNoche = precioPorNoche;

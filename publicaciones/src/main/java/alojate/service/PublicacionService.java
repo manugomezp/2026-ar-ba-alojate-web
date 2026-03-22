@@ -1,6 +1,7 @@
 package alojate.service;
 
 import alojate.config.RabbitMQConfig;
+import alojate.models.dtos.input.MultimediaDTO;
 import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
 import alojate.events.ReservaEvent;
@@ -16,11 +17,17 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PublicacionService {
@@ -32,11 +39,11 @@ public class PublicacionService {
     private final IReposCategoria reposCategoria;
     private final IReposReserva reposReserva;
     private final IRepoMultimedia iRepoMultimedia;
-    private final IRepoFavoritos iRepoFavorito;
+    private final ImageService imageService;
 
     private final GeoCoding geoCoding;
 
-    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia, IRepoFavoritos iRepoFavorito) {
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia, IRepoFavoritos iRepoFavorito, ImageService imageService) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
@@ -46,15 +53,30 @@ public class PublicacionService {
         this.reposCategoria = reposCategoria;
         this.reposReserva = reposReserva;
         this.iRepoMultimedia = iRepoMultimedia;
-        this.iRepoFavorito = iRepoFavorito;
+        this.imageService = imageService;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
     }
 
+    public void alta(PublicacionDTO datos, List<MultipartFile> imagenes) throws IOException {
+        Publicacion p = this.altaDeDatos(datos);
+        reposPublicacion.save(p);
+        if (imagenes != null && !imagenes.isEmpty()) {
+            List<String> urls = imageService.guardarTodas(imagenes, p.getId());
+            almacenarMultimedia(p, urls);
+            reposPublicacion.save(p);
+        }
+    }
 
-    public void alta(PublicacionDTO dto) {
+    public void almacenarMultimedia(Publicacion publicacion, List<String> urls){
+        for(String url : urls){
+            iRepoMultimedia.save(new Multimedia(publicacion, url));
+        }
+    }
+
+    public Publicacion altaDeDatos(PublicacionDTO dto) {
         if (dto == null){
-            return;
+            return null;
         }
 
         Publicacion p = new Publicacion();
@@ -102,8 +124,12 @@ public class PublicacionService {
 //                : null);
 
         System.out.println("SE CREO UNA PUBLICACION EN PUBLICACIONES ✔✔✔");
-        reposPublicacion.save(p);
+       // reposPublicacion.save(p);
+
+        return p;
     }
+
+
     public List<Publicacion> obtenerNoReservadas(QueryParamsPublicacion filtro, LocalDateTime checkInDateTime, LocalDateTime checkOutDateTime) {
         List<Publicacion> publis = reposPublicacion.filtrar(filtro.getPais(), filtro.getCiudad(), checkInDateTime,
                 checkOutDateTime, filtro.getAdultos(), filtro.getAmbientes());
@@ -118,26 +144,6 @@ public class PublicacionService {
         return reposPublicacion.findAllById(publisIdsDispo);
     }
 
-    public void agregarFavorito(String user_id, Long pub_id){
-        System.out.println("SE ESTÁ POR AGREGAR UN FAVORITO");
-        Publicacion publicacion = reposPublicacion.findById(pub_id).get();
-        Favorito favorito = new Favorito(user_id, publicacion);
-        System.out.println("SE AGREGÓ NOMAS; SU ID ES: " + publicacion.getId());
-
-        iRepoFavorito.save(favorito);
-    }
-    public List<FavoritoDTO> favoritos(String user_id){
-        List<Favorito> favoritos = iRepoFavorito.findAllByUserId(user_id);
-        return favoritos.stream().map(this::favToDTO).toList();
-    }
-
-    public FavoritoDTO favToDTO(Favorito f){
-        FavoritoDTO dto = new FavoritoDTO();
-        dto.setPublicacion_nombre(f.getNombre());
-        dto.setPuntaje(f.getPuntaje());
-
-        return dto;
-    }
 
 
     public List<OutPublicacionSimple> obtener(QueryParamsPublicacion filtro) {
@@ -151,13 +157,12 @@ public class PublicacionService {
         return obtenerNoReservadas(filtro,checkInDateTime,checkOutDateTime ).stream().map(this::toOutPublicacionSimple).toList();
     }
 
-    public OutPublicacionSimple toOutPublicacionSimple(Publicacion p){
-//        System.out.println("LATITUD"+ p.getUbicacion().getLatitud().toString());
-//        System.out.println("LONGITUD" + p.getUbicacion().getLongitud().toString());
+    public OutPublicacionSimple toOutPublicacionSimple(Publicacion p) {
+        List<String> urls = iRepoMultimedia.devolverURLsSegunId(p.getId());
 
         return new OutPublicacionSimple(
                 p.getId(),
-                p.getMultimedia().stream().map(Multimedia::getId).toList(),
+                urls,
                 p.getPuntaje(),
                 p.getDivisa().getNombre() + p.getCostoPorNoche().toString(),
                 p.getTitulo(),
@@ -177,18 +182,7 @@ public class PublicacionService {
                 .body(new ParameterizedTypeReference<List<String>>() {});
     }
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_PUBLICACIONES)
-    public void onReservaCreada(ReservaEvent event) {
-        System.out.println("Reserva recibida: " + event);
 
-       Publicacion publicacion = reposPublicacion
-                .findById(Long.parseLong(event.getPublicacion_id()))
-                .orElseThrow(() -> new RuntimeException("Publicación no encontrada"));
-
-       System.out.println("ESTOY CONSUMIENDO LA COLA DE RESERVAS");
-
-       reposReserva.save(new Reserva(publicacion, event.getDesde(), event.getHasta()));
-    }
 
 
 

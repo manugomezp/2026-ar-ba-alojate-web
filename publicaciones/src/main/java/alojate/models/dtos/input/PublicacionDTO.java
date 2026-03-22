@@ -10,8 +10,6 @@ public class PublicacionDTO {
     private String titulo;
     private String anfitrion_id;
     private String categoria;
-    //private List<MultimediaDTO> multimedia;
-    private List<Long> multimedia;
     private String calle;
     private String altura;
     private String pais;

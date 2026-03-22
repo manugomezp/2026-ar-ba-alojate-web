@@ -5,14 +5,22 @@ import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
 import alojate.models.dtos.output.FavoritoDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
+import alojate.models.entities.publicacion.Publicacion;
+import alojate.service.FavoritoService;
+import alojate.service.ImageService;
 import alojate.service.PublicacionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping
@@ -20,16 +28,29 @@ import java.util.List;
 public class ContUsuarios {
 
     private final PublicacionService publicacionService;
+    private final FavoritoService favoritoService;
+    private final ImageService imageService;
 
 
-    public ContUsuarios(PublicacionService publicacionService) {
+    public ContUsuarios(PublicacionService publicacionService, FavoritoService favoritoService, ImageService imageService) {
         this.publicacionService = publicacionService;
+        this.favoritoService = favoritoService;
+        this.imageService = imageService;
     }
 
 
     @PostMapping("/api/publicaciones")
     public void alta(@RequestBody PublicacionDTO dto){
-        publicacionService.alta(dto);
+        publicacionService.altaDeDatos(dto);
+    }
+
+    @PostMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PublicacionDTO> crearPublicacion(
+            @PathVariable Long userId,
+            @RequestPart("datos") PublicacionDTO datos,
+            @RequestPart(value = "imagenes", required = false) List<MultipartFile> imagenes) throws IOException {
+        publicacionService.alta(datos, imagenes);
+        return ResponseEntity.ok(datos);
     }
 
 //    @GetMapping("/api/publicaciones")
@@ -83,12 +104,12 @@ public class ContUsuarios {
                               @RequestParam String publicacion_id){
         System.out.println("ESTOY EN EL CONTROLADOR nuevoFavorito.");
         Long pub_id = Long.parseLong(publicacion_id);
-        publicacionService.agregarFavorito(user_id,pub_id);
+        favoritoService.agregarFavorito(user_id,pub_id);
     }
 
     @GetMapping("/api/favoritos")
     public List<FavoritoDTO> favoritos(String user_id){
-        return publicacionService.favoritos(user_id);
+        return favoritoService.favoritos(user_id);
     }
 
 

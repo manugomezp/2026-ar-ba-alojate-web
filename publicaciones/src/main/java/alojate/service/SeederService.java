@@ -198,17 +198,17 @@ public class SeederService implements CommandLineRunner {
 
         iRepoMultimedia.saveAll(List.of(kitchen, room, living_room, living_room2));
 
-        Publicacion p21 = new Publicacion( List.of(kitchen, room, living_room, living_room2),
-                "Depto con vista al mar",
-                desdeMDQ,
-                hastaMDQ,
-                4,              // adultos
-                2,              // ambientes
-                euro,
-                110.0,
-                u21,
-                depto
-        );
+//        Publicacion p21 = new Publicacion( List.of(kitchen, room, living_room, living_room2),
+//                "Depto con vista al mar",
+//                desdeMDQ,
+//                hastaMDQ,
+//                4,              // adultos
+//                2,              // ambientes
+//                euro,
+//                110.0,
+//                u21,
+//                depto
+//        );
 
         Publicacion p22 = new Publicacion(
                 "Monoambiente turístico",
@@ -221,7 +221,7 @@ public class SeederService implements CommandLineRunner {
                 u22,
                 depto
         );
-        reposPublicacion.saveAll(List.of(p11,p12,p13,p14,p15,p16,p17,p18,p19,p20, p21, p22));
+        reposPublicacion.saveAll(List.of(p11,p12,p13,p14,p15,p16,p17,p18,p19,p20, p22));
 
         Etiqueta wifi = new Etiqueta("WIFI");
         Etiqueta cocina = new Etiqueta("COCINA");

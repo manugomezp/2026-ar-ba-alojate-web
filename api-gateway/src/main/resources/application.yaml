@@ -9,10 +9,11 @@ spring:
             - id: publicaciones
               uri: lb://publicaciones
               predicates:
-                - Path=/alojate/publicaciones/**, /alojate/multimedia/**, /alojate/favoritos/** , /alojate/favoritos
+                - Path=/alojate/publicaciones/**, /alojate/imagenes/**,
+                  /alojate/favoritos/** , /alojate/favoritos
               filters:
                 - RewritePath=/alojate/publicaciones(?<segment>.*), /api/publicaciones${segment}
-                - RewritePath=/alojate/multimedia(?<segment>.*), /api/multimedia${segment}
+                - RewritePath=/alojate/imagenes(?<segment>.*), /api/imagenes{segment}
                 - RewritePath=/alojate/favoritos(?<segment>.*), /api/favoritos${segment}
             - id: reservas
               uri: lb://reservas
