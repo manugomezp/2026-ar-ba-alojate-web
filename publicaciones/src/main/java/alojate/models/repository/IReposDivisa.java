@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IReposDivisa extends JpaRepository<Divisa,Long> {
 
+
+    Divisa getByNombre(String nombre);
+
 }

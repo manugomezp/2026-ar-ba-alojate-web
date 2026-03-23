@@ -9,20 +9,17 @@ public class QueryParamsPublicacion {
     private String checkIn;
     private String checkOut;
     private Integer adultos;
-    private Integer ambientes;
 
     public QueryParamsPublicacion(String pais,
                            String ciudad,
                            String checkIn,
                            String checkOut,
-                           Integer adultos,
-                           Integer ambientes) {
+                           Integer adultos) {
         this.pais = pais;
         this.ciudad = ciudad;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.adultos = adultos;
-        this.ambientes = ambientes;
     }
 
 }

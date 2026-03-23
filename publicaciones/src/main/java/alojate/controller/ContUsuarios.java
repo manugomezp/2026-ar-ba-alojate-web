@@ -5,7 +5,6 @@ import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
 import alojate.models.dtos.output.FavoritoDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
-import alojate.models.entities.publicacion.Publicacion;
 import alojate.service.FavoritoService;
 import alojate.service.ImageService;
 import alojate.service.PublicacionService;
@@ -17,10 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping
@@ -29,13 +26,11 @@ public class ContUsuarios {
 
     private final PublicacionService publicacionService;
     private final FavoritoService favoritoService;
-    private final ImageService imageService;
 
 
-    public ContUsuarios(PublicacionService publicacionService, FavoritoService favoritoService, ImageService imageService) {
+    public ContUsuarios(PublicacionService publicacionService, FavoritoService favoritoService) {
         this.publicacionService = publicacionService;
         this.favoritoService = favoritoService;
-        this.imageService = imageService;
     }
 
 
@@ -77,10 +72,9 @@ public class ContUsuarios {
         @RequestParam (required=false)String ciudad,
         @RequestParam (required=false)String checkIn,
         @RequestParam (required=false)String checkOut,
-        @RequestParam (required=false)Integer adultos,
-        @RequestParam (required=false) Integer ambientes)
+        @RequestParam (required=false)Integer adultos)
     {
-        QueryParamsPublicacion filtro = new QueryParamsPublicacion(pais, ciudad, checkIn, checkOut, adultos, ambientes);
+        QueryParamsPublicacion filtro = new QueryParamsPublicacion(pais, ciudad, checkIn, checkOut, adultos);
         return publicacionService.obtener(filtro);
     }
 

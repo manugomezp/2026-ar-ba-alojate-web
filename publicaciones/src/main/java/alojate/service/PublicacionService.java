@@ -32,10 +32,11 @@ public class PublicacionService {
     private final IReposReserva reposReserva;
     private final IRepoMultimedia iRepoMultimedia;
     private final ImageService imageService;
-
     private final GeoCoding geoCoding;
+    private final IReposDivisa iReposDivisa;
 
-    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion, IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia, IRepoFavoritos iRepoFavorito, ImageService imageService) {
+    public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion,
+                              IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia, ImageService imageService, IReposDivisa iReposDivisa) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
@@ -46,6 +47,7 @@ public class PublicacionService {
         this.reposReserva = reposReserva;
         this.iRepoMultimedia = iRepoMultimedia;
         this.imageService = imageService;
+        this.iReposDivisa = iReposDivisa;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
     }
@@ -72,7 +74,7 @@ public class PublicacionService {
         }
 
         Publicacion p = new Publicacion();
-        Ubicacion u = new Ubicacion(dto.getCalle(), dto.getAltura(), dto.getCodigoPostal(), dto.getPais(), dto.getCiudad());
+        Ubicacion u = new Ubicacion(dto.getCalle(), dto.getAltura(), dto.getCodigoPostal(), dto.getPais(),  dto.getProvincia(), dto.getCiudad());
 
         u.obtenerCoordenadas(geoCoding);
         reposUbicacion.save(u);
@@ -89,6 +91,8 @@ public class PublicacionService {
         p.setHoraDeSalida(dto.getHoraDeSalida());
         p.setValidaDesde(dto.getValidaDesde().atStartOfDay());
         p.setValidaHasta(dto.getValidaHasta().atStartOfDay());
+        p.setEstado(Estado.ABIERTA);
+        p.setDivisa(iReposDivisa.getByNombre(dto.getDivisa()));
 
 //        // String -> Enum (se asume válido o null)
 //        p.setCategoria(dto.getCategoria() != null
@@ -125,7 +129,7 @@ public class PublicacionService {
 
     public List<Publicacion> obtenerNoReservadas(QueryParamsPublicacion filtro, LocalDateTime checkInDateTime, LocalDateTime checkOutDateTime) {
         List<Publicacion> publis = reposPublicacion.filtrar(filtro.getPais(), filtro.getCiudad(), checkInDateTime,
-                checkOutDateTime, filtro.getAdultos(), filtro.getAmbientes());
+                checkOutDateTime, filtro.getAdultos());
 
         List<Long> publisReservadas = reposReserva.obtenerReservadas(publis.stream().map(Publicacion::getId).toList());
 
@@ -151,7 +155,12 @@ public class PublicacionService {
     }
 
     public OutPublicacionSimple toOutPublicacionSimple(Publicacion p) {
-        List<String> urls = iRepoMultimedia.devolverURLsSegunId(p.getId());
+        List<String> urls = iRepoMultimedia.devolverURLsSegunId(p.getId())
+                .stream()
+                .map(m -> "http://localhost:8080/alojate/uploads" + m)
+                .toList();
+        System.out.println("LOG DE UNA URL: " + urls.get(0));
+
 
         return new OutPublicacionSimple(
                 p.getId(),
