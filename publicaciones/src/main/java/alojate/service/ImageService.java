@@ -20,7 +20,9 @@ public class ImageService {
     public List<String> guardarTodas(List<MultipartFile> archivos, Long publicacionId) throws IOException {
         List<String> urls = new ArrayList<>();
         Path directorio = Paths.get(uploadsDir, String.valueOf(publicacionId));
-        Files.createDirectories(directorio); // crea uploads/imagenes/42/
+        System.out.println("Intentando crear directorio en: {}" + directorio.toAbsolutePath());
+        Files.createDirectories(directorio);
+        System.out.println("Directorio creado exitosamente");
 
         for (MultipartFile archivo : archivos) {
             String nombre = UUID.randomUUID() + ".jpg";

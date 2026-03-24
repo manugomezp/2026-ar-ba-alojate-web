@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class SeederService implements CommandLineRunner {
+public class SeederService {
 
     @Autowired
     private IUbicacionRepos ubicacionRepos;
@@ -260,9 +260,9 @@ public class SeederService implements CommandLineRunner {
     }
 
 
-    @Override
-    public void run(String... args) throws Exception {
-        this.init();
-    }
+//    @Override
+//    public void run(String... args) throws Exception {
+//        this.init();
+//    }
 
 }

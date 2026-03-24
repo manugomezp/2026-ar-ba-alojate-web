@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -57,7 +58,7 @@ public class Publicacion {
             joinColumns = @JoinColumn(name = "publicacion_id"),
             inverseJoinColumns = @JoinColumn(name = "etiqueta_id")
     )
-    private List<Etiqueta> etiquetas;
+    private List<Etiqueta> etiquetas = new ArrayList<>();
 
     // CONSTRUCTOR PARA TESTEO
     public Publicacion(String titulo, LocalDateTime desde, LocalDateTime hasta,
@@ -74,6 +75,10 @@ public class Publicacion {
         this.divisa = divisa;
         this.ubicacion = ubicacion;
         this.categoria = categoria;
+    }
+
+    public void agregarEtiqueta(Etiqueta etiqueta){
+        etiquetas.add(etiqueta);
     }
 
 //    public Publicacion( String titulo, LocalDateTime desde, LocalDateTime hasta,

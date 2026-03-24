@@ -1,6 +1,5 @@
 package alojate.service;
 
-
 import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
 import alojate.models.dtos.output.OutPublicacionSimple;
@@ -34,9 +33,10 @@ public class PublicacionService {
     private final ImageService imageService;
     private final GeoCoding geoCoding;
     private final IReposDivisa iReposDivisa;
+    private final IReposEtiqueta iReposEtiqueta;
 
     public PublicacionService(DiscoveryClient discoveryClient, RestClient.Builder builder, IReposPublicacion reposPublicacion, IUbicacionRepos reposUbicacion,
-                              IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia, ImageService imageService, IReposDivisa iReposDivisa) {
+                              IReposCategoria reposCategoria, IReposReserva reposReserva, IRepoMultimedia iRepoMultimedia, ImageService imageService, IReposDivisa iReposDivisa, IReposEtiqueta iReposEtiqueta) {
         this.discoveryClient = discoveryClient;
         this.restClient = builder
                 .baseUrl("http://localhost:8090")
@@ -50,6 +50,7 @@ public class PublicacionService {
         this.iReposDivisa = iReposDivisa;
         WebClient.Builder geoBuilder = WebClient.builder();
         this.geoCoding = new GeoCodingHTTP(geoBuilder);
+        this.iReposEtiqueta = iReposEtiqueta;
     }
 
     public void alta(PublicacionDTO datos, List<MultipartFile> imagenes) throws IOException {
@@ -93,6 +94,11 @@ public class PublicacionService {
         p.setValidaHasta(dto.getValidaHasta().atStartOfDay());
         p.setEstado(Estado.ABIERTA);
         p.setDivisa(iReposDivisa.getByNombre(dto.getDivisa()));
+
+        for(String etiqueta: dto.getEtiquetas()){
+            Etiqueta eq = iReposEtiqueta.getByNombre(etiqueta.toUpperCase());
+            p.agregarEtiqueta(eq);
+        }
 
 //        // String -> Enum (se asume válido o null)
 //        p.setCategoria(dto.getCategoria() != null
@@ -159,7 +165,7 @@ public class PublicacionService {
                 .stream()
                 .map(m -> "http://localhost:8080/alojate/uploads" + m)
                 .toList();
-        System.out.println("LOG DE UNA URL: " + urls.get(0));
+       // System.out.println("LOG DE UNA URL: " + urls.get(0));
 
 
         return new OutPublicacionSimple(

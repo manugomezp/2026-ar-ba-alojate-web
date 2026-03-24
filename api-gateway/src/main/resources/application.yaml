@@ -9,8 +9,7 @@ spring:
             - id: publicaciones
               uri: lb://publicaciones
               predicates:
-                - Path=/alojate/publicaciones/**, /alojate/uploads/**,
-                  /alojate/favoritos/** , /alojate/favoritos
+                - Path=/alojate/publicaciones/**, /alojate/uploads/**, /alojate/favoritos/** , /alojate/favoritos
               filters:
                 - RewritePath=/alojate/publicaciones(?<segment>.*), /api/publicaciones${segment}
                 - RewritePath=/alojate/favoritos(?<segment>.*), /api/favoritos${segment}
@@ -47,4 +46,6 @@ logging:
   level:
     org.springframework.web: DEBUG
     org.springframework.web.multipart: DEBUG
+    org.springframework.cloud.gateway.handler.predicate: TRACE
+
 
