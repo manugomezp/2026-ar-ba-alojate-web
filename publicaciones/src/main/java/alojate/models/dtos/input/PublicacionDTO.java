@@ -30,4 +30,5 @@ public class PublicacionDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate validaHasta;
     private List<String> etiquetas;
+    private List<String> multimedia;
 }

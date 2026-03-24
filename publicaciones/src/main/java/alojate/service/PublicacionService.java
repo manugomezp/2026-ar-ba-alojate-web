@@ -132,6 +132,63 @@ public class PublicacionService {
         return p;
     }
 
+    public PublicacionDTO devolverPublicacion(Long id){
+        Publicacion entity = reposPublicacion.findById(id).get();
+
+        if (entity == null) return null;
+
+        PublicacionDTO dto = new PublicacionDTO();
+
+        dto.setTitulo(entity.getTitulo());
+        dto.setAnfitrion_id(entity.getAnfitrion_id());
+
+        // Relaciones
+        dto.setCategoria(
+                entity.getCategoria() != null ? entity.getCategoria().getNombre() : null
+        );
+
+        if (entity.getUbicacion() != null) {
+            dto.setCalle(entity.getUbicacion().getCalle());
+            dto.setAltura(entity.getUbicacion().getAltura());
+            dto.setPais(entity.getUbicacion().getPais());
+            dto.setCodigoPostal(entity.getUbicacion().getCodigoPostal());
+            dto.setProvincia(entity.getUbicacion().getProvincia());
+            dto.setCiudad(entity.getUbicacion().getCiudad());
+        }
+
+        dto.setCapacidad(entity.getCantidad_adultos_maxima());
+        dto.setDescripcion(entity.getDescripcion());
+        dto.setCostoPorNoche(entity.getCostoPorNoche());
+
+        dto.setDivisa(
+                entity.getDivisa() != null ? entity.getDivisa().getNombre() : null
+        );
+
+        dto.setFormaDePago(
+                entity.getFormaDePago() != null ? entity.getFormaDePago().getMediosDePago().toString() : "EFECTIVO"
+        );
+
+        dto.setHoraDeEntrada(entity.getHoraDeEntrada());
+        dto.setHoraDeSalida(entity.getHoraDeSalida());
+
+        // Fechas (LocalDateTime → LocalDate)
+        dto.setValidaDesde(
+                entity.getValidaDesde() != null ? entity.getValidaDesde().toLocalDate() : null
+        );
+
+        dto.setValidaHasta(
+                entity.getValidaHasta() != null ? entity.getValidaHasta().toLocalDate() : null
+        );
+
+        // Etiquetas (si no están en la entidad)
+        dto.setEtiquetas(entity.getEtiquetas().stream().map(Etiqueta::getNombre).toList());
+        List<String> multimedia = iRepoMultimedia.devolverURLsSegunId(entity.getId());
+        dto.setMultimedia(multimedia);
+        return dto;
+
+    }
+
+
 
     public List<Publicacion> obtenerNoReservadas(QueryParamsPublicacion filtro, LocalDateTime checkInDateTime, LocalDateTime checkOutDateTime) {
         List<Publicacion> publis = reposPublicacion.filtrar(filtro.getPais(), filtro.getCiudad(), checkInDateTime,

@@ -14,7 +14,6 @@ public class ReservaDTO {
     private String viajero_id;
     private String publicacion_id;
     private String nombre_publicacion;
-    private String nombre_viajero;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
     private Double costoAbonado;

@@ -5,6 +5,7 @@ import alojate.models.dtos.input.PublicacionDTO;
 import alojate.models.dtos.input.QueryParamsPublicacion;
 import alojate.models.dtos.output.FavoritoDTO;
 import alojate.models.dtos.output.OutPublicacionSimple;
+import alojate.models.repository.IReposPublicacion;
 import alojate.service.FavoritoService;
 import alojate.service.ImageService;
 import alojate.service.PublicacionService;
@@ -76,6 +77,11 @@ public class ContUsuarios {
     {
         QueryParamsPublicacion filtro = new QueryParamsPublicacion(pais, ciudad, checkIn, checkOut, adultos);
         return publicacionService.obtener(filtro);
+    }
+
+    @GetMapping("/api/publicaciones/{id}")
+    public PublicacionDTO  obtenerPublicacion(@PathVariable Long id){
+        return publicacionService.devolverPublicacion(id);
     }
 
     @GetMapping("/api/multimedia")

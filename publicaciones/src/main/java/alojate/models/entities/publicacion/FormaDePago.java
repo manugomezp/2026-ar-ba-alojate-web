@@ -22,6 +22,6 @@ public class FormaDePago {
     @Column
     private Integer pcjeSenia;
     @Enumerated(EnumType.STRING)
-    private List<MedioDePago> mediosDePago;
+    private MedioDePago mediosDePago;
 
 }
