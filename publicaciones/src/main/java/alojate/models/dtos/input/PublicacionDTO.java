@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class PublicacionDTO {
     private String titulo;
+    private String publicacion_id;
     private String anfitrion_id;
     private String categoria;
     private String calle;

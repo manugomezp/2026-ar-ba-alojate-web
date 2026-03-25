@@ -137,6 +137,8 @@ public class PublicacionService {
 
         PublicacionDTO dto = new PublicacionDTO();
 
+        dto.setPublicacion_id(entity.getId().toString());
+
         dto.setTitulo(entity.getTitulo());
         dto.setAnfitrion_id(entity.getAnfitrion_id());
 

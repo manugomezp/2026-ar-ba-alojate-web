@@ -23,13 +23,19 @@ public class RabbitMQService {
     @RabbitListener(queues = RabbitMQConfig.QUEUE_PUBLICACIONES)
     public void onReservaCreada(ReservaEvent event) {
         System.out.println("Reserva recibida: " + event);
+        try {
+            Publicacion publicacion = reposPublicacion
+                    .findById(Long.parseLong(event.getPublicacion_id()))
+                    .orElseThrow(() -> new RuntimeException("Publicación no encontrada"));
 
-        Publicacion publicacion = reposPublicacion
-                .findById(Long.parseLong(event.getPublicacion_id()))
-                .orElseThrow(() -> new RuntimeException("Publicación no encontrada"));
+            System.out.println("ESTOY CONSUMIENDO LA COLA DE RESERVAS");
 
-        System.out.println("ESTOY CONSUMIENDO LA COLA DE RESERVAS");
+            reposReserva.save(new Reserva(publicacion, event.getDesde(), event.getHasta()));
 
-        reposReserva.save(new Reserva(publicacion, event.getDesde(), event.getHasta()));
+        }
+        catch(Exception e) {
+            System.out.println("No se pudo obtener el mensaje de la cola.");
+        }
+
     }
 }
