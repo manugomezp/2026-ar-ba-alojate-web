@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum Estado {
     REALIZADA,
     TERMINADA,
-    FAVORITO,
-    CANCELADA
+    PENDIENTE,
+    CANCELADA,
+    FAVORITO
 }

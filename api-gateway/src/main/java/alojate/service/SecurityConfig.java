@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers(HttpMethod.GET,  "/alojate/publicaciones/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/alojate/publicaciones/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/alojate/reservas/**").permitAll()
                         .pathMatchers(HttpMethod.GET,  "/alojate/multimedia/**").permitAll()
                         .pathMatchers(HttpMethod.GET,  "/alojate/favoritos", "/alojate/favoritos/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/alojate/favoritos", "/alojate/favoritos/**").permitAll()

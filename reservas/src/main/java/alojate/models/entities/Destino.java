@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Deprecated
 @Embeddable
 @Data
 @NoArgsConstructor

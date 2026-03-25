@@ -21,13 +21,13 @@ public class ContUsuarios{
         this.reservaService = reservaService;
     }
 
-    @GetMapping("/api/publicaciones-reservadas")
-    public List<String> publicacionesReservadas(){
-        Reserva reserva = new Reserva("azkaban33344312");
-        Reserva reserva2 = new Reserva("alkamar333123");
-
-        return List.of(reserva.getPublicacion_id(), reserva2.getPublicacion_id());
-    }
+//    @GetMapping("/api/publicaciones-reservadas")
+//    public List<String> publicacionesReservadas(){
+//        Reserva reserva = new Reserva("azkaban33344312");
+//        Reserva reserva2 = new Reserva("alkamar333123");
+//
+//        return List.of(reserva.getPublicacionId(), reserva2.getPublicacionId());
+//    }
 
     @PostMapping("/api/reservas")
     public void alta(@RequestBody ReservaDTO reservaDTO){

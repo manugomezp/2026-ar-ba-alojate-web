@@ -135,8 +135,6 @@ public class PublicacionService {
     public PublicacionDTO devolverPublicacion(Long id){
         Publicacion entity = reposPublicacion.findById(id).get();
 
-        if (entity == null) return null;
-
         PublicacionDTO dto = new PublicacionDTO();
 
         dto.setTitulo(entity.getTitulo());
@@ -182,7 +180,8 @@ public class PublicacionService {
 
         // Etiquetas (si no están en la entidad)
         dto.setEtiquetas(entity.getEtiquetas().stream().map(Etiqueta::getNombre).toList());
-        List<String> multimedia = iRepoMultimedia.devolverURLsSegunId(entity.getId());
+        List<String> multimedia =devuelveURLimagenes(entity.getId());
+        System.out.println("ESTO ES UNA URL DEL Dto: " + multimedia.get(0));
         dto.setMultimedia(multimedia);
         return dto;
 
@@ -217,11 +216,15 @@ public class PublicacionService {
         return obtenerNoReservadas(filtro,checkInDateTime,checkOutDateTime ).stream().map(this::toOutPublicacionSimple).toList();
     }
 
-    public OutPublicacionSimple toOutPublicacionSimple(Publicacion p) {
-        List<String> urls = iRepoMultimedia.devolverURLsSegunId(p.getId())
+    public List<String> devuelveURLimagenes(Long id){
+        return iRepoMultimedia.devolverURLsSegunId(id)
                 .stream()
                 .map(m -> "http://localhost:8080/alojate/uploads" + m)
                 .toList();
+    }
+
+    public OutPublicacionSimple toOutPublicacionSimple(Publicacion p) {
+        List<String> urls = devuelveURLimagenes(p.getId());
        // System.out.println("LOG DE UNA URL: " + urls.get(0));
 
 

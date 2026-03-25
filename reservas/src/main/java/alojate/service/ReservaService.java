@@ -4,10 +4,7 @@ import alojate.models.dtos.ReseniaDTO;
 import alojate.models.dtos.ReservaDTO;
 import alojate.events.ReservaEvent;
 import alojate.models.dtos.output.OutReseniaDTO;
-import alojate.models.entities.Destino;
-import alojate.models.entities.Puntaje;
-import alojate.models.entities.Resenia;
-import alojate.models.entities.Reserva;
+import alojate.models.entities.*;
 import alojate.models.dtos.output.OutReservaDTO;
 import alojate.models.repository.IReposResenia;
 import alojate.models.repository.IReposReserva;
@@ -32,15 +29,16 @@ public class ReservaService {
 
 
     public void alta(ReservaDTO dto) {
-        Destino destino  = new Destino("Buenos Aires, Argentina");
+
         Reserva reserva = new Reserva(dto.getViajero_id(), dto.getPublicacion_id(),
                 dto.getNombre_publicacion(), dto.getNombre_viajero(),dto.getCheckIn(), dto.getCheckOut(),
-                dto.getCostoAbonado(), dto.getCostoPorAbonar(), destino, dto.getEstado());
+                dto.getCostoAbonado(), dto.getCostoPorAbonar(), dto.getDestino(), dto.getEstado());
 
         reposReserva.save(reserva);
         reservaEventPublisher.publicarReservaCreada(new ReservaEvent(dto.getPublicacion_id(),
                 dto.getCheckIn().toLocalDate(), dto.getCheckOut().toLocalDate()));
     }
+
 
 
 //    public OutReservaDTO devolver(Long reserva_id){
