@@ -73,9 +73,12 @@ public class ContUsuarios {
         @RequestParam (required=false)String ciudad,
         @RequestParam (required=false)String checkIn,
         @RequestParam (required=false)String checkOut,
-        @RequestParam (required=false)Integer adultos)
+        @RequestParam (required=false)Integer adultos,
+        @RequestParam (required = false) String categoria,
+        @RequestParam (required = false) List<String> etiquetas)
     {
-        QueryParamsPublicacion filtro = new QueryParamsPublicacion(pais, ciudad, checkIn, checkOut, adultos);
+        QueryParamsPublicacion filtro = new QueryParamsPublicacion(pais, ciudad, checkIn,
+                checkOut, adultos, categoria, etiquetas);
         return publicacionService.obtener(filtro);
     }
 

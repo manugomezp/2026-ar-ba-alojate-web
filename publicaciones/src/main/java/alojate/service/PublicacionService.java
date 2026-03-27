@@ -193,16 +193,13 @@ public class PublicacionService {
 
     public List<Publicacion> obtenerNoReservadas(QueryParamsPublicacion filtro, LocalDateTime checkInDateTime, LocalDateTime checkOutDateTime) {
         List<Publicacion> publis = reposPublicacion.filtrar(filtro.getPais(), filtro.getCiudad(), checkInDateTime,
-                checkOutDateTime, filtro.getAdultos());
+                checkOutDateTime, filtro.getAdultos(), filtro.getCategoria(), filtro.getEtiquetas());
 
-        List<Long> publisReservadas = reposReserva.obtenerReservadas(publis.stream().map(Publicacion::getId).toList());
+        List<Long> publisReservadas = reposReserva.obtenerReservadas(checkInDateTime.toLocalDate(), checkOutDateTime.toLocalDate());
 
-        List<Long> publisIdsDispo = publis.stream()
-                .map(Publicacion::getId)
-                .filter(id -> publisReservadas.stream().noneMatch(res -> res.equals(id)))
-                .toList();
-
-        return reposPublicacion.findAllById(publisIdsDispo);
+        if(publisReservadas.isEmpty())
+            return publis;
+        return reposPublicacion.obtenerTodosExcepto(publis.stream().map(Publicacion::getId).toList(), publisReservadas);
     }
 
 
