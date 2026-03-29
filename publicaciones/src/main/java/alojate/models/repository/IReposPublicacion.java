@@ -15,19 +15,6 @@ import java.util.List;
 @Repository
 public interface IReposPublicacion extends JpaRepository<Publicacion, Long> {
 
-//    @Query("""
-//                SELECT p
-//                FROM Publicacion p
-//                WHERE (:pais IS NULL OR p.ubicacion.pais = :pais)
-//                  AND (:ciudad IS NULL OR p.ubicacion.ciudad = :ciudad)
-//                  AND (:checkIn IS NULL OR p.validaDesde <= :checkIn)
-//                  AND (:checkOut IS NULL OR p.validaHasta >= :checkOut)
-//                  AND (:adultos IS NULL OR p.cantidad_adultos_maxima >= :adultos)
-//                  AND p.estado = "ABIERTA"
-//            """)
-//    List<Publicacion> filtrar(String pais, String ciudad, LocalDateTime checkIn,
-//                              LocalDateTime checkOut, Integer adultos);
-
     @Query("""
     SELECT p
     FROM Publicacion p
