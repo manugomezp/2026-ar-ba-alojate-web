@@ -21,7 +21,7 @@ public class FileSystemConfig implements WebMvcConfigurer {
         System.out.println("uploads dir: " + uploadsDir);
         System.out.println("Resource location: " + "file:///" + uploadsDir + "/");
 
-        // Verificar que el directorio existe
+        // Se fija si el directorio existe
         Path path = Paths.get(uploadsDir);
         System.out.println("Directorio existe: " + Files.exists(path));
         System.out.println("Directorio es legible: " + Files.isReadable(path));
