@@ -1,4 +1,4 @@
-# 2026-ar-ba-alojate-web
+# Aplicación Web Alojate 1.0.
 ## DOMINIO
 ### Esta aplicación web intenta emular el funcionamiento de reconocidas plataformas de alquileres temporales tales como Airbnb, Booking, Despegar, etc. El objetivo principal es que un usuario pueda registrarse y reservar un alojamiento en las fechas disponibles. En este repositorio se encuentran todos los componentes relacionados al backend. En el siguiente enlace https://github.com/manugomezp/2026-ar-ba-aloj-frontend se encuentra todo lo vinculado al frontend.
 ## ARQUITECTURA Y TECNOLOGÍA
