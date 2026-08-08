@@ -7,3 +7,4 @@
 ### React para el desarrollo del frontend mediante una Single Web Application; Vite como herramienta de compilación. 
 ### Auth0 para la implementación de sesiones de usuario, admitiendo SSO y gestionando los tokens de cada sesión.
 ### MySQL Workbench para visualizar los elementos persistidos mediante el ORM Hibernate.
+### Postman para el testeo de cada API REST involucrada en el desarrollo de la aplicación.
